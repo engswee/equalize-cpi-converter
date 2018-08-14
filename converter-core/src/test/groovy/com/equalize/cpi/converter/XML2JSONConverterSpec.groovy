@@ -6,35 +6,75 @@ import org.apache.camel.impl.DefaultCamelContext
 import org.apache.camel.impl.DefaultExchange
 
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class XML2JSONConverterSpec extends Specification {
+	static final String filePath = 'src/test/resources/JSON'
+
 	Exchange exchange
+	Map<String,Object> properties
+
+	String inputFileName
+	String outputFileName
+	File expectedOutputFile
 
 	def setup() {
 		// Setup the Camel context, Camel exchange
 		CamelContext context = new DefaultCamelContext()
 		this.exchange = new DefaultExchange(context)
+		this.properties = ['converterClass':'com.equalize.cpi.converter.XML2JSONConverter']
 	}
 
-	@Unroll
-	def 'body of #outputfile is generated from input of #inputfile'(String inputfile, String outputfile, Map propertyMap) {
-		given: 'input file is set as body of exchange'
-		File inputFile = new File("src/test/resources/$inputfile")
-		this.exchange.getIn().setBody(inputFile)
+	private process() {
+		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
+		this.expectedOutputFile = new File("$filePath/$outputFileName")
 
-		when: 'conversion is executed'
-		def fcb = new FormatConversionBean(this.exchange, propertyMap)
-		String output = fcb.convert()
+		def fcb = new FormatConversionBean(this.exchange, properties)
+		fcb.convert()
+	}
 
-		then: 'contents of conversion output is same as output file'
-		File outputFile = new File("src/test/resources/$outputfile")
-		output == outputFile.text
+	// Reference - https://blogs.sap.com/2015/03/18/jsontransformbean-part-2-converting-xml-to-json-content/
 
-		where:
-		inputfile | outputfile | propertyMap
-		'XML2JSON_Scenario1.xml' | 'XML2JSON_Scenario1_output.json' | ['converterClass':'com.equalize.cpi.converter.XML2JSONConverter','indentFactor':'2','skipRootNode':'Y']
-		'XML2JSON_Scenario3.xml' | 'XML2JSON_Scenario3_output.json' | ['converterClass':'com.equalize.cpi.converter.XML2JSONConverter','indentFactor':'2','skipRootNode':'Y','arrayFieldList':'single,SortAs,oneparentmanychild,title']
-		'XML2JSON_Scenario3.xml' | 'XML2JSON_Scenario3a_output.json' | ['converterClass':'com.equalize.cpi.converter.XML2JSONConverter','indentFactor':'2','skipRootNode':'Y','forceArrayAll':'Y']
+	def 'XML -> JSON - set skipRootNode'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.inputFileName = 'XML2JSON_Scenario1.xml'
+		this.outputFileName = 'XML2JSON_Scenario1_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.text
+	}
+
+	def 'XML -> JSON - default no indent and skip'() {
+		given:
+		this.inputFileName = 'XML2JSON_Scenario2.xml'
+		this.outputFileName = 'XML2JSON_Scenario2_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.text
+	}
+
+	def 'XML -> JSON - selected list of array fields'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.properties << ['arrayFieldList':'single,SortAs,oneparentmanychild,title']
+		this.inputFileName = 'XML2JSON_Scenario3.xml'
+		this.outputFileName = 'XML2JSON_Scenario3_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.text
+	}
+
+	def 'XML -> JSON - set forceArrayAll'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.properties << ['forceArrayAll':'Y']
+		this.inputFileName = 'XML2JSON_Scenario3.xml'
+		this.outputFileName = 'XML2JSON_Scenario3a_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.text
 	}
 }

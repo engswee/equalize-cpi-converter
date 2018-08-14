@@ -1,5 +1,8 @@
 package com.equalize.cpi.converter
 
+import java.io.File
+import java.util.Map
+
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.impl.DefaultCamelContext
@@ -8,29 +11,48 @@ import org.apache.camel.impl.DefaultExchange
 import spock.lang.Specification
 
 class FormatConversionBeanSpec extends Specification {
+	static final String filePath = 'src/test/resources'
+
 	Exchange exchange
+	Map<String,Object> properties
+
+	String inputFileName
+	String outputFileName
+	File expectedOutputFile
 
 	def setup() {
 		// Setup the Camel context, Camel exchange
 		CamelContext context = new DefaultCamelContext()
 		this.exchange = new DefaultExchange(context)
+		this.properties = [:]
 	}
 
-	def 'ClassNotFoundException is thrown when an invalid converter class is configured'(String inputfile, String outputfile, Map propertyMap) {
-		given: 'input file is set as body of exchange'
-		File inputFile = new File("src/test/resources/$inputfile")
-		this.exchange.getIn().setBody(inputFile)
+	private process() {
+		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
+		this.expectedOutputFile = new File("$filePath/$outputFileName")
 
-		when: 'conversion is executed'
-		def fcb = new FormatConversionBean(this.exchange, propertyMap)
-		String output = fcb.convert()
+		def fcb = new FormatConversionBean(this.exchange, properties)
+		fcb.convert()
+	}
 
-		then: 'exception is thrown'
+	def 'Exception is thrown when converterClass is not configured'() {
+		when:
+		process()
+
+		then:
+		RuntimeException e = thrown()
+		e.message == "Mandatory parameter 'converterClass' is missing"
+	}
+
+	def 'ClassNotFoundException is thrown when an invalid converter class is configured'() {
+		given:
+		this.properties << ['converterClass':'dummyClassName']
+
+		when:
+		process()
+
+		then:
 		ClassNotFoundException e = thrown()
 		e.message == 'dummyClassName is an invalid converter class'
-
-		where:
-		inputfile | outputfile | propertyMap
-		'input.xml' | 'output.json' | ['converterClass':'dummyClassName']
 	}
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<MT_JSON2XML>
+	<SortAs>SGML</SortAs>
+	<GlossDef>
+		<GlossSeeAlso>GML</GlossSeeAlso>
+		<GlossSeeAlso>XML</GlossSeeAlso>
+		<para>A meta-markup language, used to create markup languages such as DocBook.</para>
+	</GlossDef>
+	<GlossTerm>Standard Generalized Markup Language</GlossTerm>
+	<GlossSee>markup</GlossSee>
+	<ID>SGML</ID>
+	<Acronym>SGML</Acronym>
+	<Abbrev>ISO 8879:1986</Abbrev>
+</MT_JSON2XML>

@@ -17,7 +17,7 @@ class PropertyHelper {
 		}
 		return propertyValue
 	}
-	
+
 	String getProperty(String propertyName) {
 		getProperty(propertyName, null)
 	}
@@ -25,16 +25,21 @@ class PropertyHelper {
 	int getPropertyAsInt(String propertyName, String defaultValue) {
 		getProperty(propertyName, defaultValue) as int
 	}
-	
+
 	int getPropertyAsInt(String propertyName) {
 		getPropertyAsInt(propertyName, null)
 	}
-	
+
 	boolean getPropertyAsBoolean(String propertyName, String defaultValue) {
 		getProperty(propertyName, defaultValue).toBoolean()
 	}
-	
+
 	boolean getPropertyAsBoolean(String propertyName) {
 		getPropertyAsBoolean(propertyName, null)
+	}
+
+	void checkValidValues(String propertyName, Object propertyValue, Set<Object> validValues) {
+		if(!validValues.contains(propertyValue))
+			throw new RuntimeException("Value '$propertyValue' not valid for parameter $propertyName")
 	}
 }

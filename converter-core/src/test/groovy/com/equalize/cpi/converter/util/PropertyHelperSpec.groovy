@@ -1,7 +1,6 @@
 package com.equalize.cpi.converter.util
 
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class PropertyHelperSpec extends Specification {
 	Map<String,Object> properties = [:]
@@ -21,7 +20,7 @@ class PropertyHelperSpec extends Specification {
 		when: 'try to retrieve an existing property'
 		String content = this.ph.getProperty('stringParam')
 		String contentBlank = this.ph.getProperty('stringParamBlank')
-		
+
 		then: 'value of property is returned'
 		content == 'abcDEF'
 		contentBlank == ''
@@ -50,7 +49,7 @@ class PropertyHelperSpec extends Specification {
 		when: 'try to retrieve an existing property'
 		int content = this.ph.getPropertyAsInt('intParam')
 		int contentZero = this.ph.getPropertyAsInt('intParamZero')
-		
+
 		then: 'value of property is returned'
 		content == 2
 		contentZero == 0
@@ -79,7 +78,7 @@ class PropertyHelperSpec extends Specification {
 		when: 'try to retrieve an existing property'
 		boolean content = this.ph.getPropertyAsBoolean('booleanParamYes')
 		boolean contentNo = this.ph.getPropertyAsBoolean('booleanParamNo')
-		
+
 		then: 'value of property is returned'
 		content == true
 		contentNo == false
@@ -102,5 +101,22 @@ class PropertyHelperSpec extends Specification {
 		then: 'default value of property is returned'
 		content == true
 		contentNo == false
+	}
+
+	def 'checkValidValues - exception is not thrown if configured parameter is a valid value'() {
+		when: 'enter a valid value for parameter'
+		this.ph.checkValidValues('outputType', 'plain', ['plain','xml'] as Set)
+
+		then: 'Exception is not thrown'
+		RuntimeException e = notThrown()
+	}
+
+	def 'checkValidValues - exception is thrown if configured parameter is not a valid value'() {
+		when: 'enter an invalid value for parameter'
+		this.ph.checkValidValues('outputType', 'test', ['plain','xml'] as Set)
+
+		then: 'Exception is thrown'
+		RuntimeException e = thrown()
+		e.message == "Value 'test' not valid for parameter outputType"
 	}
 }
