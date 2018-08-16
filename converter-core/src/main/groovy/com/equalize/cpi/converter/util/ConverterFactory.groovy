@@ -17,12 +17,11 @@ class ConverterFactory {
 		String converterClassName = ph.getProperty('converterClass')
 		try {
 			// Dynamic loading and instantiation of converter class
-			ClassLoader classloader = Thread.currentThread().getContextClassLoader()
-			Class<?> converterClass = Class.forName(converterClassName, true, classloader)
+			Class<?> converterClass = Class.forName(converterClassName)
 			Constructor<?> constructor = converterClass.getConstructor(Exchange, Map);
-			(AbstractConverter) constructor.newInstance(exchange, properties)
+			return (AbstractConverter) constructor.newInstance(exchange, properties)
 		} catch(ClassNotFoundException e) {
-			throw new ClassNotFoundException("$e.message is an invalid converter class")
+			throw new ClassNotFoundException("$converterClassName is an invalid converter class")
 		}
 	}
 }

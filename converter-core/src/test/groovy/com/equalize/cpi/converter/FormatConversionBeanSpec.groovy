@@ -1,8 +1,5 @@
 package com.equalize.cpi.converter
 
-import java.io.File
-import java.util.Map
-
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.impl.DefaultCamelContext
