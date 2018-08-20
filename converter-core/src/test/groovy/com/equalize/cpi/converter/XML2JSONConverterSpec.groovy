@@ -77,4 +77,15 @@ class XML2JSONConverterSpec extends Specification {
 		expect:
 		process() == this.expectedOutputFile.text
 	}
+
+	def 'XML -> JSON - handle empty XML fields and left-right whitespaces'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.inputFileName = 'XML2JSON_Scenario1b.xml'
+		this.outputFileName = 'XML2JSON_Scenario1b_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.text
+	}
 }
