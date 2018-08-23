@@ -41,7 +41,7 @@ class FormatConversionBeanSpec extends Specification {
 		e.message == "Mandatory parameter 'converterClass' is missing"
 	}
 
-	def 'ClassNotFoundException is thrown when an invalid converter class is configured'() {
+	def 'Exception is thrown when an invalid converter class is configured'() {
 		given:
 		this.properties << ['converterClass':'dummyClassName']
 
@@ -49,7 +49,7 @@ class FormatConversionBeanSpec extends Specification {
 		process()
 
 		then:
-		ClassNotFoundException e = thrown()
+		RuntimeException e = thrown()
 		e.message == 'dummyClassName is an invalid converter class'
 	}
 }
