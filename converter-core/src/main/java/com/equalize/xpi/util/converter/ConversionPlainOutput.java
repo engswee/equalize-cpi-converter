@@ -1,11 +1,11 @@
 package com.equalize.xpi.util.converter;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ConversionPlainOutput {
 
-	public String generateLineText(ArrayList<Field> childFields, String fieldSeparator, String[] fixedLengths, String endSeparator, String fixedLengthTooShortHandling) throws Exception{
+	public String generateLineText(List<Field> childFields, String fieldSeparator, String[] fixedLengths, String endSeparator, String fixedLengthTooShortHandling) throws Exception{
 		if(fixedLengths == null) {
 			return generateDelimitedLine(childFields, fieldSeparator, endSeparator);
 		} else {
@@ -13,7 +13,7 @@ public class ConversionPlainOutput {
 		}
 	}
 
-	private String generateDelimitedLine(ArrayList<Field> childFields, String fieldSeparator, String endSeparator) throws IOException {		
+	private String generateDelimitedLine(List<Field> childFields, String fieldSeparator, String endSeparator) throws IOException {		
 		StringBuilder sb = new StringBuilder();
 		int leafFieldCount = 0;
 		// Process all child elements that are fields
@@ -34,7 +34,7 @@ public class ConversionPlainOutput {
 		return sb.toString();
 	}
 
-	private String generateFixedLengthLine(ArrayList<Field> childFields, String[] fixedLengths, String endSeparator, String fixedLengthTooShortHandling) throws ConverterException {		
+	private String generateFixedLengthLine(List<Field> childFields, String[] fixedLengths, String endSeparator, String fixedLengthTooShortHandling) throws ConverterException {		
 		StringBuilder sb = new StringBuilder();
 		int leafFieldCount = 0;
 		// Process all child elements that are fields

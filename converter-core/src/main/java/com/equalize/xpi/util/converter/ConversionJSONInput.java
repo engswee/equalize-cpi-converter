@@ -1,8 +1,5 @@
 package com.equalize.xpi.util.converter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,15 +8,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ConversionJSONInput {
-	private final JSONObject jsonObj;	
+	private final JSONObject jsonObj;
 
-	public ConversionJSONInput(String input)  {
+	public ConversionJSONInput(String input) {
 		this.jsonObj = new JSONObject(input.trim());
 	}
 
-	public ConversionJSONInput(String input, String topArrayName)  {
+	public ConversionJSONInput(String input, String topArrayName) {
 		String content = input.trim();
-		if(content.startsWith("[")) {
+		if (content.startsWith("[")) {
 			JSONArray topArray = new JSONArray(content);
 			this.jsonObj = new JSONObject();
 			this.jsonObj.put(topArrayName, topArray);
@@ -28,21 +25,21 @@ public class ConversionJSONInput {
 		}
 	}
 
-	public ConversionJSONInput(byte[] inputBytes) throws UnsupportedEncodingException {
-		this(Converter.toString(inputBytes));
-	}
-
-	public ConversionJSONInput(byte[] inputBytes, String encoding) throws UnsupportedEncodingException {
-		this(Converter.toString(inputBytes, encoding));
-	}
-
-	public ConversionJSONInput(InputStream inStream) throws IOException {
-		this(Converter.toString(inStream));
-	}
-
-	public ConversionJSONInput(InputStream inStream, String encoding) throws IOException {
-		this(Converter.toString(inStream, encoding));
-	}
+//	public ConversionJSONInput(byte[] inputBytes) throws UnsupportedEncodingException {
+//		this(Converter.toString(inputBytes));
+//	}
+//
+//	public ConversionJSONInput(byte[] inputBytes, String encoding) throws UnsupportedEncodingException {
+//		this(Converter.toString(inputBytes, encoding));
+//	}
+//
+//	public ConversionJSONInput(InputStream inStream) throws IOException {
+//		this(Converter.toString(inStream));
+//	}
+//
+//	public ConversionJSONInput(InputStream inStream, String encoding) throws IOException {
+//		this(Converter.toString(inStream, encoding));
+//	}
 
 	public List<Field> extractJSONContent() {
 		return parseJSON(this.jsonObj);
@@ -51,7 +48,7 @@ public class ConversionJSONInput {
 	private List<Field> parseJSON(JSONObject jo) {
 		List<Field> arr = new ArrayList<Field>();
 		Iterator<String> keyIter = jo.keys();
-		while(keyIter.hasNext()) {
+		while (keyIter.hasNext()) {
 			String keyName = keyIter.next();
 			Object parsedObj = parseJSON(jo.get(keyName));
 			arr.add(new Field(keyName, parsedObj));
@@ -61,7 +58,7 @@ public class ConversionJSONInput {
 
 	private Object[] parseJSON(JSONArray ja) {
 		Object[] objects = new Object[ja.length()];
-		for(int i = 0; i < ja.length(); i++) {
+		for (int i = 0; i < ja.length(); i++) {
 			Object parsedObj = parseJSON(ja.get(i));
 			objects[i] = parsedObj;
 		}

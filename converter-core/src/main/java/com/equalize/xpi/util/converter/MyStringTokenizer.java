@@ -2,13 +2,14 @@ package com.equalize.xpi.util.converter;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 //Modified copy of com.sap.aii.af.sdk.xi.adapter.MyStringTokenizer
 public class MyStringTokenizer {
 	private boolean isStandard;
 	StringTokenizer st;
-	ArrayList<String> arr;
+	List<String> arr;
 	int index;
 	String enclBegin;
 	String enclEnd;
