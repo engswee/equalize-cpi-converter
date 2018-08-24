@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ns:MT_Base64 xmlns:ns="urn:dummy">
-  <base64Content>VGVzdCBEYXRhIHRvIGJlIGVuY29kZWQgYnkgQmFzZTY0RW5jb2RlQ29udmVydGVyIGFuZCBlbWJlZGRlZCBpbnRvIGFuIFhNTCBlbGVtZW50DQoNCkxpbmUgMQ0KTGluZSAyDQpMaW5lIDM=</base64Content>
+  <base64Content>VGVzdCBEYXRhIHRvIGJlIGVuY29kZWQgYnkgQmFzZTY0RW5jb2RlQ29udmVydGVyIGFuZCBlbWJlZGRlZCBpbnRvIGFuIFhNTCBlbGVtZW50CgpMaW5lIDEKTGluZSAyCkxpbmUgMw==</base64Content>
 </ns:MT_Base64>

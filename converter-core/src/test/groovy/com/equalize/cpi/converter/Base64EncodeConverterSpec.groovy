@@ -11,6 +11,7 @@ import com.equalize.xpi.util.converter.ConversionBase64Decode
 
 class Base64EncodeConverterSpec extends Specification {
 	static final String filePath = 'src/test/resources/Base64'
+	static final String newLine = System.getProperty('line.separator')
 
 	Exchange exchange
 	Map<String,Object> properties
@@ -106,10 +107,10 @@ class Base64EncodeConverterSpec extends Specification {
 		// So instead just reverse the process and see if it can decode back the encoded content
 		// to get back the original file
 		ConversionBase64Decode decoder = new ConversionBase64Decode(new String(encoded), true)
-		byte[] decoded = decoder.decode()
+		String decodedText = new String(decoder.decode())
 
 		then:
-		new String(decoded) == this.expectedOutputFile.text
+		decodedText == this.expectedOutputFile.text
 	}
 
 	def 'Base64 Encode - XML output with default field name'() {
@@ -120,8 +121,15 @@ class Base64EncodeConverterSpec extends Specification {
 		this.inputFileName = 'Base64Encode_Scenario2.txt'
 		this.outputFileName = 'Base64Encode_Scenario2_default_output.xml'
 
-		expect:
-		new String(process()) == this.expectedOutputFile.text
+		when:
+		String generatedOutput = new String(process())
+		// XML is generated with system native line endings
+		// So on Windows, replace CRLF so that it matches sample output
+		if (newLine == '\r\n')
+			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
+
+		then:
+		generatedOutput == this.expectedOutputFile.text
 	}
 
 	def 'Base64 Encode - XML output with configured field name'() {
@@ -133,7 +141,14 @@ class Base64EncodeConverterSpec extends Specification {
 		this.inputFileName = 'Base64Encode_Scenario2.txt'
 		this.outputFileName = 'Base64Encode_Scenario2_output.xml'
 
-		expect:
-		new String(process()) == this.expectedOutputFile.text
+		when:
+		String generatedOutput = new String(process())
+		// XML is generated with system native line endings
+		// So on Windows, replace CRLF so that it matches sample output
+		if (newLine == '\r\n')
+			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
+
+		then:
+		generatedOutput == this.expectedOutputFile.text
 	}
 }

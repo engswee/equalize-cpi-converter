@@ -9,6 +9,7 @@ import spock.lang.Specification
 
 class JSON2XMLConverterSpec extends Specification {
 	static final String filePath = 'src/test/resources/JSON'
+	static final String newLine = System.getProperty('line.separator')
 
 	Exchange exchange
 	Map<String,Object> properties
@@ -77,8 +78,15 @@ class JSON2XMLConverterSpec extends Specification {
 		this.inputFileName = 'JSON2XML_Scenario1_glossary.json'
 		this.outputFileName = 'JSON2XML_Scenario1_glossary_output_indent.xml'
 
-		expect:
-		new String(process()) == this.expectedOutputFile.text
+		when:
+		String generatedOutput = new String(process())
+		// XML is generated with system native line endings
+		// So on Windows, replace CRLF so that it matches sample output
+		if (newLine == '\r\n')
+			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
+
+		then:
+		generatedOutput == this.expectedOutputFile.text
 	}
 
 	def 'JSON -> XML - exception is thrown if topArrayName is not configured when allowArrayAtTop is set'() {
@@ -105,8 +113,15 @@ class JSON2XMLConverterSpec extends Specification {
 		this.inputFileName = 'JSON2XML_Scenario3_array.json'
 		this.outputFileName = 'JSON2XML_Scenario3_array_output.xml'
 
-		expect:
-		new String(process()) == this.expectedOutputFile.text
+		when:
+		String generatedOutput = new String(process())
+		// XML is generated with system native line endings
+		// So on Windows, replace CRLF so that it matches sample output
+		if (newLine == '\r\n')
+			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
+
+		then:
+		generatedOutput == this.expectedOutputFile.text
 	}
 
 	def 'JSON -> XML - set escapeInvalidNameStartChar'() {
@@ -118,8 +133,15 @@ class JSON2XMLConverterSpec extends Specification {
 		this.inputFileName = 'JSON2XML_Scenario2.json'
 		this.outputFileName = 'JSON2XML_Scenario2_output.xml'
 
-		expect:
-		new String(process()) == this.expectedOutputFile.text
+		when:
+		String generatedOutput = new String(process())
+		// XML is generated with system native line endings
+		// So on Windows, replace CRLF so that it matches sample output
+		if (newLine == '\r\n')
+			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
+
+		then:
+		generatedOutput == this.expectedOutputFile.text
 	}
 
 	def 'JSON -> XML - set mangleInvalidNameChar'() {
@@ -131,7 +153,14 @@ class JSON2XMLConverterSpec extends Specification {
 		this.inputFileName = 'JSON2XML_Scenario4.json'
 		this.outputFileName = 'JSON2XML_Scenario4_output.xml'
 
-		expect:
-		new String(process()) == this.expectedOutputFile.text
+		when:
+		String generatedOutput = new String(process())
+		// XML is generated with system native line endings
+		// So on Windows, replace CRLF so that it matches sample output
+		if (newLine == '\r\n')
+			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
+
+		then:
+		generatedOutput == this.expectedOutputFile.text
 	}
 }
