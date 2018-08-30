@@ -1,5 +1,6 @@
 package com.equalize.cpi.converter
 
+import com.equalize.converter.core.util.ConverterException
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.impl.DefaultCamelContext
@@ -37,7 +38,7 @@ class FormatConversionBeanSpec extends Specification {
 		process()
 
 		then:
-		RuntimeException e = thrown()
+		ConverterException e = thrown()
 		e.message == "Mandatory parameter 'converterClass' is missing"
 	}
 

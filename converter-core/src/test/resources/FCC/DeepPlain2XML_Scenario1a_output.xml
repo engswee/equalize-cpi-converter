@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns:MT_DeepPlain2XML xmlns:ns="urn:equalize:com">
+  <Delivery>
+    <Type>D</Type>
+    <DeliveryNo>Delivery1</DeliveryNo>
+    <Order>
+      <Type>O</Type>
+      <DeliveryNo>Order A, for Delivery1</DeliveryNo>
+      <OrderNo>Order1_A</OrderNo>
+    </Order>
+    <Order>
+      <Type>O</Type>
+      <DeliveryNo>Order B " for endsign; Delivery1</DeliveryNo>
+      <OrderNo>Order1_B</OrderNo>
+    </Order>
+  </Delivery>
+</ns:MT_DeepPlain2XML>

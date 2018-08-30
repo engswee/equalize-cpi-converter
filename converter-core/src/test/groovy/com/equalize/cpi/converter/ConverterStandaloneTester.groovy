@@ -1,17 +1,15 @@
-import java.util.HashMap
+package com.equalize.cpi.converter
 
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.impl.DefaultCamelContext
 import org.apache.camel.impl.DefaultExchange
 
-import com.equalize.cpi.converter.FormatConversionBean
-
 /*
  Sample arguments for script 
  C:\Users\yeohe\Desktop\XML2JSON_Scenario1.xml
  C:\Users\yeohe\Desktop\output.txt
- converterClass=com.equalize.cpi.converter.XML2JSONConverter&indentFactor=2&skipRootNode=Y
+ converterClass=com.equalize.converter.core.XML2JSONConverter&indentFactor=2&skipRootNode=Y
  */
 if(args.size() < 3)
 	throw new RuntimeException('Less than 3 arguments provided')

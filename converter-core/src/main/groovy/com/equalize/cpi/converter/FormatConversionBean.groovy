@@ -1,10 +1,11 @@
 package com.equalize.cpi.converter
 
 import org.apache.camel.Exchange
-import com.equalize.cpi.converter.util.AbstractConverter
+
+import com.equalize.converter.core.util.AbstractConverter
+import com.equalize.converter.core.util.ClassTypeConverter
+import com.equalize.converter.core.util.ConverterFactory
 import com.equalize.cpi.converter.util.CamelClassTypeConverter
-import com.equalize.cpi.converter.util.ClassTypeConverter
-import com.equalize.cpi.converter.util.ConverterFactory
 
 class FormatConversionBean {
 	final Object body

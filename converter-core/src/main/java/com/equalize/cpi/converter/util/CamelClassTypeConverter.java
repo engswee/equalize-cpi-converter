@@ -3,6 +3,8 @@ package com.equalize.cpi.converter.util;
 import org.apache.camel.Exchange;
 import org.apache.camel.TypeConverter;
 
+import com.equalize.converter.core.util.ClassTypeConverter;
+
 public class CamelClassTypeConverter implements ClassTypeConverter {
 	private final Exchange exchange;
 
