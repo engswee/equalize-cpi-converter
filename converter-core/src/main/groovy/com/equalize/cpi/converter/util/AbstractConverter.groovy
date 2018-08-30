@@ -1,17 +1,15 @@
 package com.equalize.cpi.converter.util
 
-import org.apache.camel.Exchange
-
 abstract class AbstractConverter {
-	protected final Exchange exchange
+	protected final Object body
 	protected final Map<String,Object> properties
-	protected final TypeConverterHelper tch
+	protected final ClassTypeConverter typeConverter
 	protected final PropertyHelper ph
 
-	AbstractConverter(Exchange exchange, Map<String,Object> properties) {
-		this.exchange = exchange
+	AbstractConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
+		this.body = body
 		this.properties = properties
-		this.tch = new TypeConverterHelper(exchange)
+		this.typeConverter = typeConverter
 		this.ph = new PropertyHelper(properties)
 	}
 

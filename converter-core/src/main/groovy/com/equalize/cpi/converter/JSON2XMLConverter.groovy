@@ -1,12 +1,10 @@
 package com.equalize.cpi.converter
 
-import org.apache.camel.Exchange
-
-import com.equalize.xpi.util.converter.ConversionJSONInput
-import com.equalize.xpi.util.converter.ConversionDOMOutput
-import com.equalize.xpi.util.converter.Field
-
 import com.equalize.cpi.converter.util.AbstractConverter
+import com.equalize.cpi.converter.util.ClassTypeConverter
+import com.equalize.xpi.util.converter.ConversionDOMOutput
+import com.equalize.xpi.util.converter.ConversionJSONInput
+import com.equalize.xpi.util.converter.Field
 
 class JSON2XMLConverter extends AbstractConverter {
 	String documentName
@@ -18,8 +16,8 @@ class JSON2XMLConverter extends AbstractConverter {
 	String topArrayName
 	List<Field> inputContents
 
-	JSON2XMLConverter(Exchange exchange, Map<String,Object> properties) {
-		super(exchange, properties)
+	JSON2XMLConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
+		super(body, properties, typeConverter)
 	}
 
 	@Override
@@ -36,7 +34,7 @@ class JSON2XMLConverter extends AbstractConverter {
 
 	@Override
 	void parseInput() {
-		def input =  this.tch.convertTo(String, this.exchange.getIn().getBody())
+		def input =  this.typeConverter.convertTo(String, this.body)
 		ConversionJSONInput jsonIn
 		if(this.allowArrayAtTop)
 			jsonIn = new ConversionJSONInput(input, this.topArrayName)

@@ -1,6 +1,5 @@
 package com.equalize.cpi.converter.util
 
-import org.apache.camel.Exchange
 import java.lang.reflect.Constructor
 
 class ConverterFactory {
@@ -12,14 +11,14 @@ class ConverterFactory {
 		new ConverterFactory()
 	}
 
-	AbstractConverter newConverter(Exchange exchange, Map<String,Object> properties) {
+	AbstractConverter newConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
 		PropertyHelper ph = new PropertyHelper(properties)
 		String converterClassName = ph.getProperty('converterClass')
 		try {
 			// Dynamic loading and instantiation of converter class
 			Class<?> converterClass = Class.forName(converterClassName)
-			Constructor<?> constructor = converterClass.getConstructor(Exchange, Map);
-			return (AbstractConverter) constructor.newInstance(exchange, properties)
+			Constructor<?> constructor = converterClass.getConstructor(Object, Map, ClassTypeConverter);
+			return (AbstractConverter) constructor.newInstance(body, properties, typeConverter)
 		} catch(ClassNotFoundException e) {
 			throw new ClassNotFoundException("$converterClassName is an invalid converter class")
 		}

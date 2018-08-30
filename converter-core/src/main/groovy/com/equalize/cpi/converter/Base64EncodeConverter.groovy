@@ -1,12 +1,9 @@
 package com.equalize.cpi.converter
 
-import org.apache.camel.Exchange
-
+import com.equalize.cpi.converter.util.AbstractConverter
+import com.equalize.cpi.converter.util.ClassTypeConverter
 import com.equalize.xpi.util.converter.ConversionBase64Encode
 import com.equalize.xpi.util.converter.ConversionDOMOutput
-
-import com.equalize.cpi.converter.util.AbstractConverter
-
 import com.equalize.xpi.util.converter.Field
 
 class Base64EncodeConverter extends AbstractConverter {
@@ -17,8 +14,8 @@ class Base64EncodeConverter extends AbstractConverter {
 	boolean compress
 	byte[] content
 
-	Base64EncodeConverter(Exchange exchange, Map<String,Object> properties) {
-		super(exchange, properties)
+	Base64EncodeConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
+		super(body, properties, typeConverter)
 	}
 
 	@Override
@@ -37,7 +34,7 @@ class Base64EncodeConverter extends AbstractConverter {
 
 	@Override
 	void parseInput() {
-		this.content = this.tch.convertTo(byte[], this.exchange.getIn().getBody())
+		this.content = this.typeConverter.convertTo(byte[], this.body)
 	}
 
 	@Override

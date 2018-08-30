@@ -1,11 +1,9 @@
 package com.equalize.cpi.converter
 
-import org.apache.camel.Exchange
-
+import com.equalize.cpi.converter.util.AbstractConverter
+import com.equalize.cpi.converter.util.ClassTypeConverter
 import com.equalize.xpi.util.converter.ConversionBase64Decode
 import com.equalize.xpi.util.converter.ConversionDOMInput
-
-import com.equalize.cpi.converter.util.AbstractConverter
 
 class Base64DecodeConverter extends AbstractConverter {
 	String inputType
@@ -14,8 +12,8 @@ class Base64DecodeConverter extends AbstractConverter {
 	boolean zippedContent
 	String base64String
 
-	Base64DecodeConverter(Exchange exchange, Map<String,Object> properties) {
-		super(exchange, properties)
+	Base64DecodeConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
+		super(body, properties, typeConverter)
 	}
 
 	@Override
@@ -32,11 +30,9 @@ class Base64DecodeConverter extends AbstractConverter {
 	@Override
 	void parseInput() {
 		if(this.inputType == 'plain') {
-			this.base64String = this.tch.convertTo(String, this.exchange.getIn().getBody())
-			//def is =  this.tch.convertTo(InputStream, this.exchange.getIn().getBody())
-			//this.base64String = Converter.toString(is)
+			this.base64String = this.typeConverter.convertTo(String, this.body)
 		} else if(this.inputType == 'xml') {
-			def is =  this.tch.convertTo(InputStream, this.exchange.getIn().getBody())
+			def is =  this.typeConverter.convertTo(InputStream, this.body)
 			ConversionDOMInput domIn = new ConversionDOMInput(is)
 			this.base64String = domIn.evaluateXPathToString(this.xpath)
 		}

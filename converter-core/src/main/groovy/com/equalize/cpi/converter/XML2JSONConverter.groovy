@@ -1,12 +1,10 @@
 package com.equalize.cpi.converter
 
-import org.apache.camel.Exchange
-
+import com.equalize.cpi.converter.util.AbstractConverter
+import com.equalize.cpi.converter.util.ClassTypeConverter
 import com.equalize.xpi.util.converter.ConversionDOMInput
 import com.equalize.xpi.util.converter.ConversionJSONOutput
 import com.equalize.xpi.util.converter.XMLElementContainer
-
-import com.equalize.cpi.converter.util.AbstractConverter
 
 class XML2JSONConverter extends AbstractConverter {
 	int indentFactor
@@ -15,8 +13,8 @@ class XML2JSONConverter extends AbstractConverter {
 	Set<String> arrayFields = []
 	XMLElementContainer rootXML
 
-	XML2JSONConverter(Exchange exchange, Map<String,Object> properties) {
-		super(exchange, properties)
+	XML2JSONConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
+		super(body, properties, typeConverter)
 	}
 
 	@Override
@@ -34,7 +32,7 @@ class XML2JSONConverter extends AbstractConverter {
 
 	@Override
 	void parseInput() {
-		def is =  this.tch.convertTo(InputStream, this.exchange.getIn().getBody())
+		def is =  this.typeConverter.convertTo(InputStream, this.body)
 		ConversionDOMInput domIn = new ConversionDOMInput(is)
 		this.rootXML = domIn.extractDOMContent()
 	}
