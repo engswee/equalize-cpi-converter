@@ -1,0 +1,11 @@
+Version History
+
+----------------------------------------------------------------------------------------------------
+1.0.0 - Released 4 Sep 2018
+----------------------------------------------------------------------------------------------------
+Initial release of FormatConversionBean for SAP Cloud Platform Integration (CPI)
+
+Includes following converters
+i) XML <> JSON
+ii) Base64 Decoder/Encoder
+iii) Plain <> XML
