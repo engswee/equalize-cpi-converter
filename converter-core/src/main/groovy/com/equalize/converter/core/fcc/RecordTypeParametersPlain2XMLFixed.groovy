@@ -6,73 +6,70 @@ import com.equalize.converter.core.util.PropertyHelper
 
 class RecordTypeParametersPlain2XMLFixed extends RecordTypeParametersPlain2XML {
 
-	RecordTypeParametersPlain2XMLFixed(String fieldSeparator, String[] fixedLengths) {
-		super(fieldSeparator, fixedLengths)
+	RecordTypeParametersPlain2XMLFixed(String[] fixedLengths) {
+		super(null, fixedLengths)
 	}
 
+	@Override
 	void storeAdditionalParameters(String recordTypeName, String[] recordsetList, PropertyHelper param) {
 		super.storeAdditionalParameters(recordTypeName, recordsetList, param)
-		if (this.fieldNames.length != this.fixedLengths.length) {
+		if (this.fieldNames.length != this.fixedLengths.length)
 			throw new ConverterException("No. of fields in 'fieldNames' and 'fieldFixedLengths' do not match for record type = '$recordTypeName'")
-		}
 		storeKeyFieldParameters(recordTypeName, param, false)
 	}
 
+	@Override
 	String parseKeyFieldValue(String lineInput) {
-		String currentLineKeyFieldValue = null
 		String valueAtKeyFieldPosition = dynamicSubstring(lineInput, this.keyFieldStartPosition, this.keyFieldLength)
-		if (valueAtKeyFieldPosition.trim() == this.keyFieldValue) {
-			currentLineKeyFieldValue = this.keyFieldValue
-		}
-		return currentLineKeyFieldValue
+		if (valueAtKeyFieldPosition.trim() == this.keyFieldValue)
+			return this.keyFieldValue
+		else
+			return null
 	}
 
-	Field[] extractLineContents(String lineInput, boolean trim, int lineIndex) {
+	@Override
+	List<Field> extractLineContents(String lineInput, boolean trim, int lineIndex) {
 		List<Field> fields = new ArrayList<Field>()
 		int start = 0
-		for (int i = 0; i < this.fieldNames.length; i++) {
-			int length = Integer.parseInt(this.fixedLengths[i])
+		this.fieldNames.eachWithIndex { fieldName, index ->
+			int length = this.fixedLengths[index] as int
 			String content = dynamicSubstring(lineInput, start, length)
 
 			if (lineInput.length() < start) {
 				if (this.missingLastFields.toLowerCase() == 'error') {
 					throw new ConverterException("Line ${lineIndex+1} has less fields than configured")
 				} else if (this.missingLastFields.toLowerCase() == 'add') {
-					fields.add(createNewField(this.fieldNames[i], content, trim))
+					fields << createNewField(fieldName, content, trim)
 				}
 			} else {
-				fields.add(createNewField(this.fieldNames[i], content, trim))
+				fields << createNewField(fieldName, content, trim)
 			}
 			// Set start location for next field
 			start += length
 
-			// After the last configured field, check if there are any more
-			// content in the input
-			if (i == this.fieldNames.length - 1 && lineInput.length() > start
-			&& this.additionalLastFields.toLowerCase() == 'error') {
+			// After the last configured field, check if there are any more content in the input
+			if (index == this.fieldNames.length - 1 && lineInput.length() > start && this.additionalLastFields.toLowerCase() == 'error')
 				throw new ConverterException("Line ${lineIndex+1} has more fields than configured")
-			}
 		}
-		return fields.toArray(new Field[fields.size()])
+		return fields
 	}
 
 	private String dynamicSubstring(String input, int startPos, int length) {
 		int endPos = startPos + length - 1
-		String output = ''
 
 		if (startPos < input.length()) {
 			if (endPos < input.length()) {
 				// Start & end positions are before end of input, return the
 				// partial substring
-				output = input.substring(startPos, endPos + 1)
+				return input.substring(startPos, endPos + 1)
 			} else {
 				// Start position is before start of input but end position
 				// is after end of input, return from start till end of input
-				output = input.substring(startPos, input.length())
+				return input.substring(startPos, input.length())
 			}
 		} else {
 			// Start position is after end of input, return empty string
+			return ''
 		}
-		return output
 	}
 }

@@ -33,9 +33,8 @@ class RecordTypeParametersFactory {
 			fixedLengths = null
 		} else {
 			String lengthsWithoutComma = tempFixedLengths.replaceAll(',', '')
-			if (!checkNumeric(lengthsWithoutComma)) {
+			if (!containsOnlyDigits(lengthsWithoutComma))
 				throw new ConverterException("Maintain only integers separated by commas for '$fieldFixedLengthsName'")
-			}
 			fixedLengths = tempFixedLengths.split(',')
 		}
 
@@ -49,25 +48,18 @@ class RecordTypeParametersFactory {
 		switch (convType) {
 			case 'xml2plain':
 				if (fieldSeparator)
-					return new RecordTypeParametersXML2PlainCSV(fieldSeparator, fixedLengths)
+					return new RecordTypeParametersXML2PlainCSV(fieldSeparator)
 				else
-					return new RecordTypeParametersXML2PlainFixed(fieldSeparator, fixedLengths)
+					return new RecordTypeParametersXML2PlainFixed(fixedLengths)
 			case 'plain2xml':
 				if (fieldSeparator)
-					return new RecordTypeParametersPlain2XMLCSV(fieldSeparator, fixedLengths)
+					return new RecordTypeParametersPlain2XMLCSV(fieldSeparator)
 				else
-					return new RecordTypeParametersPlain2XMLFixed(fieldSeparator, fixedLengths)
+					return new RecordTypeParametersPlain2XMLFixed(fixedLengths)
 		}
 	}
 
-	private boolean checkNumeric(String input) {
-		boolean result = true
-		for (int i = 0; i < input.length(); i++) {
-			if (!Character.isDigit(input.charAt(i))) {
-				result = false
-				break
-			}
-		}
-		return result
+	private boolean containsOnlyDigits(String input) {
+		return input.toCharArray().every { Character.isDigit(it) }
 	}
 }

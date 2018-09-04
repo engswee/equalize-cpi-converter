@@ -29,16 +29,10 @@ abstract class RecordTypeParametersPlain2XML {
 		this.parentRecordType = param.retrieveProperty("${recordTypeName}.parent")
 		if (this.parentRecordType == recordTypeName) {
 			throw new ConverterException("Value in '${recordTypeName}.parent' cannot be the same as substructure name")
-		} else if (this.parentRecordType != 'Root') {
-			boolean found = false
-			recordsetList.each {
-				if (!found && this.parentRecordType == it) {
-					found = true
-				}
-			}
-			if (!found) {
+		} else if (this.parentRecordType != 'Root') {			
+			boolean found = recordsetList.any { it == this.parentRecordType }
+			if (!found)
 				throw new ConverterException("Value '${this.parentRecordType}' in '${recordTypeName}.parent' not found in parameter 'recordsetStructure'")
-			}
 		}
 
 		// Field names
@@ -54,7 +48,7 @@ abstract class RecordTypeParametersPlain2XML {
 
 	abstract String parseKeyFieldValue(String lineInput)
 
-	abstract Field[] extractLineContents(String lineInput, boolean trim, int lineIndex)
+	abstract List<Field> extractLineContents(String lineInput, boolean trim, int lineIndex)
 
 	protected Field createNewField(String fieldName, String fieldValue, boolean trim) {
 		if (trim) {
@@ -77,12 +71,12 @@ abstract class RecordTypeParametersPlain2XML {
 					this.keyFieldIndex = i
 					found = true
 					if (!csvMode) {
-						this.keyFieldLength = Integer.parseInt(this.fixedLengths[i])
+						this.keyFieldLength = this.fixedLengths[i] as int
 					}
 					break
 				}
 				if (!csvMode) {
-					this.keyFieldStartPosition += Integer.parseInt(this.fixedLengths[i])
+					this.keyFieldStartPosition += this.fixedLengths[i] as int
 				}
 			}
 			if (!found) {
@@ -98,7 +92,7 @@ abstract class RecordTypeParametersPlain2XML {
 			if (set.contains(field))
 				throw new ConverterException("Duplicate field found in '${recordTypeName}.fieldNames': $field")
 			else
-				set.add(field)
+				set << field
 		}
 
 	}

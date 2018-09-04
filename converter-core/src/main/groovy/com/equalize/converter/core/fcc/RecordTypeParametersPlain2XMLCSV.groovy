@@ -12,10 +12,11 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 	String enclBeginEsc
 	String enclEndEsc
 
-	RecordTypeParametersPlain2XMLCSV(String fieldSeparator, String[] fixedLengths) {
-		super(fieldSeparator, fixedLengths)
+	RecordTypeParametersPlain2XMLCSV(String fieldSeparator) {
+		super(fieldSeparator, null)
 	}
 
+	@Override
 	void storeAdditionalParameters(String recordTypeName, String[] recordsetList, PropertyHelper param) {
 		super.storeAdditionalParameters(recordTypeName, recordsetList, param)
 		storeKeyFieldParameters(recordTypeName, param, true)
@@ -27,18 +28,17 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 		this.enclosureConversion = param.retrievePropertyAsBoolean("${recordTypeName}.enclosureConversion", 'Y')
 	}
 
+	@Override
 	String parseKeyFieldValue(String lineInput) {
-		String currentLineKeyFieldValue = null
 		String[] inputFieldContents = splitLineBySeparator(lineInput)
-		if (this.keyFieldIndex < inputFieldContents.length) {
-			if (inputFieldContents[this.keyFieldIndex] == this.keyFieldValue) {
-				currentLineKeyFieldValue = this.keyFieldValue
-			}
-		}
-		return currentLineKeyFieldValue
+		if ((this.keyFieldIndex < inputFieldContents.length) && inputFieldContents[this.keyFieldIndex] == this.keyFieldValue)
+			return this.keyFieldValue
+		else
+			return null
 	}
 
-	Field[] extractLineContents(String lineInput, boolean trim, int lineIndex) {
+	@Override
+	List<Field> extractLineContents(String lineInput, boolean trim, int lineIndex) {
 		List<Field> fields = new ArrayList<Field>()
 
 		String[] inputFieldContents = splitLineBySeparator(lineInput)
@@ -59,14 +59,11 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 				outputSize = this.fieldNames.length
 			}
 		}
-		for (int i = 0; i < outputSize; i++) {
-			String content = ''
-			if (i < inputFieldContents.length) {
-				content = inputFieldContents[i]
-			}
-			fields.add(createNewField(this.fieldNames[i], content, trim))
+		outputSize.times { index ->
+			String content = (index < inputFieldContents.length) ? inputFieldContents[index] : ''
+			fields << createNewField(this.fieldNames[index], content, trim)
 		}
-		return fields.toArray(new Field[fields.size()])
+		return fields
 	}
 
 	private String[] splitLineBySeparator(String input) {
@@ -74,18 +71,17 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 		List<String> contents = new ArrayList<String>()
 		MyStringTokenizer tokenizer = new MyStringTokenizer(input, this.fieldSeparator, this.enclBegin, this.enclEnd,
 				this.enclBeginEsc, this.enclEndEsc, true)
-		for (int i = 0; i < tokenizer.countTokens(); i++) {
+		tokenizer.countTokens().times {
 			String fieldContent = (String) tokenizer.nextElement()
 			// If the token field content is not a separator, then store it in
 			// the output array
 			if (fieldContent.compareToIgnoreCase(this.fieldSeparator) != 0) {
-				if (this.enclosureConversion) {
-					contents.add(tokenizer.convertEncls(fieldContent))
-				} else {
-					contents.add(fieldContent)
-				}
+				if (this.enclosureConversion)
+					contents << tokenizer.convertEncls(fieldContent)
+				else
+					contents << fieldContent
 			}
 		}
-		return contents.toArray(new String[contents.size()])
+		return contents as String[]
 	}
 }

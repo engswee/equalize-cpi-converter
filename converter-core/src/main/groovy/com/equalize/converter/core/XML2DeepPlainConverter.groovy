@@ -62,20 +62,16 @@ class XML2DeepPlainConverter extends AbstractConverter {
 		StringBuilder sb = new StringBuilder()
 		// First, construct output for current element's child fields
 		if (!isRoot) {
-			sb.append(generateRowTextForElement(element))
+			sb << generateRowTextForElement(element)
 		}
 		// Then recursively process child elements that are segments
-		for (Field childField : element.getChildFields()) {
-			Object fieldContent = childField.fieldContent
-			if (fieldContent instanceof XMLElementContainer) {
-				sb.append(constructTextfromXML((XMLElementContainer) fieldContent, false))
-			}
+		element.getChildFields().findAll { it.fieldContent instanceof XMLElementContainer }.each {
+			sb << constructTextfromXML((XMLElementContainer) it.fieldContent, false)
 		}
 		return sb.toString()
 	}
 
 	private String generateRowTextForElement(XMLElementContainer element) {
-
 		List<Field> childFields = element.getChildFields()
 		String segmentName = element.getElementName()
 		if (!this.recordTypes.containsKey(segmentName)) {
@@ -92,16 +88,8 @@ class XML2DeepPlainConverter extends AbstractConverter {
 	}
 
 	private void checkFieldCountConsistency(String segmentName, List<Field> childFields, int noOfColumns) {
-		int leafFieldCount = 0
-		// Count the number of child leaf nodes
-		for (Field childField : childFields) {
-			Object fieldContent = childField.fieldContent
-			if (fieldContent instanceof String) {
-				leafFieldCount++
-			}
-		}
-		if (leafFieldCount > noOfColumns) {
+		int leafFieldCount = childFields.findAll { it.fieldContent instanceof String }.size()
+		if (leafFieldCount > noOfColumns)
 			throw new ConverterException("More fields found in XML structure than specified in parameter '${segmentName}.fieldFixedLengths'")
-		}
 	}
 }

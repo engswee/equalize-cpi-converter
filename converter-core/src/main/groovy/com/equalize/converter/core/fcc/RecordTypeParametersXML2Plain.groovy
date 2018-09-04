@@ -20,11 +20,10 @@ abstract class RecordTypeParametersXML2Plain {
 		// End Separator
 		String tempEndSeparator = param.retrieveProperty("${recordTypeName}.endSeparator", '')
 		if (!tempEndSeparator) {
-			tempEndSeparator = Separator.newLine
+			this.endSeparator = Separator.newLine
 		} else {
 			Separator sep = new Separator(tempEndSeparator, encoding)
-			tempEndSeparator = sep.toString()
+			this.endSeparator = sep.toString()
 		}
-		this.endSeparator = tempEndSeparator
 	}
 }

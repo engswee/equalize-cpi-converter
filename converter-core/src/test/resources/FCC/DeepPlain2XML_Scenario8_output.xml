@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns:MT_DeepPlain2XML xmlns:ns="urn:equalize:com">
+  <Line>
+    <Key>field1</Key>
+    <Value>value1</Value>
+  </Line>
+  <Line>
+    <Key>field2</Key>
+    <Value>value2</Value>
+  </Line>
+  <Line>
+    <Key>field3</Key>
+    <Value>value3</Value>
+  </Line>
+</ns:MT_DeepPlain2XML>

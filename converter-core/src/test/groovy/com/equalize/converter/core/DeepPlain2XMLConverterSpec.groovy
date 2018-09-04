@@ -387,7 +387,7 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		expect:
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
-	
+
 	def 'Plain > XML - Fixed length input with key field not in first position'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
@@ -691,6 +691,24 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.properties << ['indentFactor':'2']
 		this.inputFileName = 'DeepPlain2XML_Scenario5a.txt'
 		this.outputFileName = 'DeepPlain2XML_Scenario5a_output.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - CSV input with generic record type and endSeparator'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Line']
+		this.properties << ['genericRecordType':'Line']
+		this.properties << ['Line.fieldNames':'Key,Value']
+		this.properties << ['Line.parent':'Root']
+		this.properties << ['Line.fieldSeparator':'=']
+		this.properties << ['indentFactor':'2']
+		this.properties << ['endSeparator':'&']
+		this.inputFileName = 'DeepPlain2XML_Scenario8.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario8_output.xml'
 
 		expect:
 		process() == this.expectedOutputFile.getText('UTF-8')

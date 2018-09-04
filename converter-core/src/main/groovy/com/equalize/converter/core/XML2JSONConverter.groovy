@@ -23,11 +23,8 @@ class XML2JSONConverter extends AbstractConverter {
 		this.skipRootNode = this.ph.retrievePropertyAsBoolean('skipRootNode', 'N')
 		this.forceArrayAll = this.ph.retrievePropertyAsBoolean('forceArrayAll', 'N')
 		String arrayFieldList = this.ph.retrieveProperty('arrayFieldList', '')
-		if(arrayFieldList && arrayFieldList.trim()) {
-			arrayFieldList.split(',').each {
-				this.arrayFields.add(it)
-			}
-		}
+		if(arrayFieldList && arrayFieldList.trim())
+			this.arrayFields = arrayFieldList.split(',') as Set
 	}
 
 	@Override

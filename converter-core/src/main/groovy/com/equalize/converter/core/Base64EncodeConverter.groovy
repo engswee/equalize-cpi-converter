@@ -44,7 +44,7 @@ class Base64EncodeConverter extends AbstractConverter {
 			case 'xml':
 				ConversionDOMOutput domOut = new ConversionDOMOutput(this.documentName, this.documentNamespace)
 				List<Field> xmlContent = new ArrayList<Field>()
-				xmlContent.add(new Field(this.base64FieldName, base64String))
+				xmlContent << new Field(this.base64FieldName, base64String)
 
 				domOut.setIndentFactor(2)
 				ByteArrayOutputStream baos = domOut.generateDOMOutput(xmlContent)
