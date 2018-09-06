@@ -1,4 +1,4 @@
-package com.equalize.converter.core.util;
+package com.sap.aii.af.sdk.xi.adapter;
 
 import java.io.StringWriter;
 import java.util.ArrayList;

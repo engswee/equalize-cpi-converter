@@ -24,18 +24,20 @@ class XML2DeepPlainConverter extends AbstractConverter {
 	}
 
 	@Override
-	void getParameters(){
-		this.encoding = this.ph.getProperty('encoding', 'UTF-8')
-		this.recordsetStructure = this.ph.getProperty('recordsetStructure')
+	void retrieveParameters(){
+		this.encoding = this.ph.retrieveProperty('encoding', 'UTF-8')
+		this.recordsetStructure = this.ph.retrieveProperty('recordsetStructure')
 
 		String[] recordsetList = this.recordsetStructure.split(',')
-		for (String recordTypeName : recordsetList) {
+		recordsetList.each { recordTypeName ->
 			if (!this.recordTypes.containsKey(recordTypeName)) {
 				RecordTypeParametersXML2Plain rtp = (RecordTypeParametersXML2Plain) RecordTypeParametersFactory
 						.newInstance()
 						.newParameter(recordTypeName, recordsetList, this.encoding, this.ph, 'xml2plain')
-				rtp.setAdditionalParameters(recordTypeName, this.ph, this.encoding)
+				rtp.storeAdditionalParameters(recordTypeName, this.ph, this.encoding)
 				this.recordTypes.put(recordTypeName, rtp)
+			} else {
+				throw new ConverterException("Duplicate field found in 'recordsetStructure': $recordTypeName")
 			}
 		}
 	}
@@ -53,7 +55,7 @@ class XML2DeepPlainConverter extends AbstractConverter {
 		// Create output converter and generate output flat content
 		this.plainOut = new ConversionPlainOutput()
 
-		constructTextfromXML(this.rootXML, true).getBytes()
+		constructTextfromXML(this.rootXML, true).getBytes(encoding)
 	}
 
 	private String constructTextfromXML(XMLElementContainer element, boolean isRoot) {

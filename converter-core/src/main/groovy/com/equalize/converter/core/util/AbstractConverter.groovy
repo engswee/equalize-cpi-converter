@@ -13,7 +13,7 @@ abstract class AbstractConverter {
 		this.ph = new PropertyHelper(properties)
 	}
 
-	abstract void getParameters()
+	abstract void retrieveParameters()
 
 	abstract void parseInput()
 

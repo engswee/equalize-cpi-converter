@@ -1,4 +1,4 @@
-package com.equalize.converter.core.util;
+package com.sap.aii.af.sdk.xi.adapter.trans;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -8,7 +8,6 @@ import java.nio.charset.Charset;
 public class Separator
 {
 	boolean endsWithNewLine;
-	String errorString;
 	String sepStr;
 	public static String newLine = System.getProperty("line.separator");
 
@@ -21,7 +20,6 @@ public class Separator
 	{
 		int ind = 0;
 
-		this.errorString = null;
 		this.sepStr = sepStr;
 		if (sepStr.endsWith("'nl'"))
 		{
@@ -70,11 +68,6 @@ public class Separator
 				this.sepStr = new String(sepStr + (this.endsWithNewLine ? newLine : ""));
 			}
 		}
-	}
-
-	String getError()
-	{
-		return this.errorString;
 	}
 
 	public String toString()

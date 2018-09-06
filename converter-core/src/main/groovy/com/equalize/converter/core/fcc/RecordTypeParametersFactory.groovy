@@ -2,7 +2,7 @@ package com.equalize.converter.core.fcc
 
 import com.equalize.converter.core.util.ConverterException
 import com.equalize.converter.core.util.PropertyHelper
-import com.equalize.converter.core.util.Separator
+import com.sap.aii.af.sdk.xi.adapter.trans.Separator
 
 class RecordTypeParametersFactory {
 
@@ -14,12 +14,12 @@ class RecordTypeParametersFactory {
 		return new RecordTypeParametersFactory()
 	}
 
-	Object newParameter(String recordTypeName, String[] recordsetList, String encoding, PropertyHelper param, String convType) throws ConverterException {
+	Object newParameter(String recordTypeName, String[] recordsetList, String encoding, PropertyHelper param, String convType) {
 		// Set parameter values for the record type
 		// 1 - Field Separator
-		String defaultFieldSeparator = param.getProperty('defaultFieldSeparator', '')
+		String defaultFieldSeparator = param.retrieveProperty('defaultFieldSeparator', '')
 		String fieldSeparatorName = "${recordTypeName}.fieldSeparator"
-		String fieldSeparator = param.getProperty(fieldSeparatorName, defaultFieldSeparator)
+		String fieldSeparator = param.retrieveProperty(fieldSeparatorName, defaultFieldSeparator)
 		if (fieldSeparator) {
 			Separator sep = new Separator(fieldSeparator, encoding)
 			fieldSeparator = sep.toString()
@@ -27,7 +27,7 @@ class RecordTypeParametersFactory {
 
 		// 2 - Fixed Lengths
 		String fieldFixedLengthsName = "${recordTypeName}.fieldFixedLengths"
-		String tempFixedLengths = param.getProperty(fieldFixedLengthsName, '')
+		String tempFixedLengths = param.retrieveProperty(fieldFixedLengthsName, '')
 		String[] fixedLengths
 		if (!tempFixedLengths) {
 			fixedLengths = null
@@ -57,8 +57,6 @@ class RecordTypeParametersFactory {
 					return new RecordTypeParametersPlain2XMLCSV(fieldSeparator, fixedLengths)
 				else
 					return new RecordTypeParametersPlain2XMLFixed(fieldSeparator, fixedLengths)
-			default:
-				throw new ConverterException("Conversion type $convType not supported")
 		}
 	}
 

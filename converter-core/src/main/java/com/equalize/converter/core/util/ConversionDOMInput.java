@@ -45,10 +45,10 @@ public class ConversionDOMInput {
 		return (Node) xpe.evaluate(this.doc, XPathConstants.NODE);
 	}
 
-	public String evaluateXPathToString(String xpath) throws XPathExpressionException {
+	public String evaluateXPathToString(String xpath) throws XPathExpressionException, ConverterException {
 		Node node = evaluateXPathToNode(xpath);
 		if (node == null) {
-			throw new XPathExpressionException("XPath " + xpath + " does not exist");
+			throw new ConverterException("XPath " + xpath + " does not exist");
 		}
 		return node.getTextContent();
 	}
@@ -66,8 +66,10 @@ public class ConversionDOMInput {
 			case Node.ELEMENT_NODE:
 				hasChildElements = true;
 				element.addChildField(child.getNodeName(), parseNode(child));
+				break;
 			case Node.TEXT_NODE:
 				textContent = child.getNodeValue();
+				break;
 			}
 		}
 		// If an element node has no further child element nodes, then it is a

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:Material xmlns:ns0="urn:test.org:Material">
+	<Material>
+		<MaterialNumber>TEST-01</MaterialNumber>
+		<CreatedDate>20180901</CreatedDate>
+		<CreatedBy>TEST_USER</CreatedBy>
+		<MaterialType>STD</MaterialType>
+		<Taxonomy>Generic materials</Taxonomy>
+		<Description>test ü</Description>
+	</Material>
+</ns0:Material>

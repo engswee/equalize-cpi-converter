@@ -18,11 +18,11 @@ class XML2JSONConverter extends AbstractConverter {
 	}
 
 	@Override
-	void getParameters() {
-		this.indentFactor = this.ph.getPropertyAsInt('indentFactor', '0')
-		this.skipRootNode = this.ph.getPropertyAsBoolean('skipRootNode', 'N')
-		this.forceArrayAll = this.ph.getPropertyAsBoolean('forceArrayAll', 'N')
-		String arrayFieldList = this.ph.getProperty('arrayFieldList', '')
+	void retrieveParameters() {
+		this.indentFactor = this.ph.retrievePropertyAsInt('indentFactor', '0')
+		this.skipRootNode = this.ph.retrievePropertyAsBoolean('skipRootNode', 'N')
+		this.forceArrayAll = this.ph.retrievePropertyAsBoolean('forceArrayAll', 'N')
+		String arrayFieldList = this.ph.retrieveProperty('arrayFieldList', '')
 		if(arrayFieldList && arrayFieldList.trim()) {
 			arrayFieldList.split(',').each {
 				this.arrayFields.add(it)

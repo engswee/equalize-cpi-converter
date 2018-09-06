@@ -44,7 +44,7 @@ class XML2JSONConverterSpec extends Specification {
 		this.outputFileName = 'XML2JSON_Scenario1_output.json'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'XML -> JSON - default no indent and skip'() {
@@ -53,7 +53,7 @@ class XML2JSONConverterSpec extends Specification {
 		this.outputFileName = 'XML2JSON_Scenario2_output.json'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'XML -> JSON - selected list of array fields'() {
@@ -65,7 +65,7 @@ class XML2JSONConverterSpec extends Specification {
 		this.outputFileName = 'XML2JSON_Scenario3_output.json'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'XML -> JSON - set forceArrayAll'() {
@@ -77,7 +77,7 @@ class XML2JSONConverterSpec extends Specification {
 		this.outputFileName = 'XML2JSON_Scenario3a_output.json'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'XML -> JSON - handle empty XML fields and left-right whitespaces'() {
@@ -88,6 +88,17 @@ class XML2JSONConverterSpec extends Specification {
 		this.outputFileName = 'XML2JSON_Scenario1b_output.json'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'XML -> JSON - input with umlaut'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.inputFileName = 'material.xml'
+		this.outputFileName = 'material.json'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 }

@@ -36,7 +36,7 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		def fcb = new FormatConversionBean(this.exchange, properties)
 		byte[] output = fcb.convert()
 
-		String generatedOutput = new String(output)
+		String generatedOutput = new String(output, 'UTF-8')
 		// XML is generated with system native line endings
 		// So on Windows, replace CRLF so that it matches sample output
 		if (newLine == '\r\n')
@@ -152,6 +152,25 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		e.message == "Maintain only integers separated by commas for 'Header.fieldFixedLengths'"
 	}
 
+	def 'Plain > XML - exception is thrown when no of fields in fieldNames and fieldFixedLengths do not match'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Header.fieldNames':'Key,Line,Value']
+		this.properties << ['keyFieldName':'Key']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Header.fieldFixedLengths':'5,10']
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "No. of fields in 'fieldNames' and 'fieldFixedLengths' do not match for record type = 'Header'"
+	}
+
 	def 'Plain > XML - exception is thrown when duplicate found in fieldNames'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
@@ -169,6 +188,85 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		then:
 		ConverterException e = thrown()
 		e.message == "Duplicate field found in 'Header.fieldNames': Line"
+	}
+
+	def 'Plain > XML - exception is thrown when key field not found in fieldNames'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Header.fieldNames':'Field1,Field2']
+		this.properties << ['keyFieldName':'Key']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['defaultFieldSeparator':',']
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Key field 'Key' not found in 'Header.fieldNames'"
+	}
+
+	def 'Plain > XML - exception is thrown when duplicate found in recordsetStructure'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Header']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Header.fieldNames':'Key,Line']
+		this.properties << ['keyFieldName':'Key']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['defaultFieldSeparator':',']
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Duplicate field found in 'recordsetStructure': Header"
+	}
+
+	def 'Plain > XML - exception is thrown when reserve name Root is configured in recordsetStructure'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Root']
+		this.properties << ['Root.parent':'Root']
+		this.properties << ['Root.fieldNames':'Key,Line']
+		this.properties << ['keyFieldName':'Key']
+		this.properties << ['Root.keyFieldValue':'H']
+		this.properties << ['defaultFieldSeparator':',']
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "'Root' is a reserved name and not allowed in parameter 'recordsetStructure'"
+	}
+
+	def 'Plain > XML - exception is thrown when parent is same as record type'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Detail']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Header.fieldNames':'Key,Line']
+		this.properties << ['keyFieldName':'Key']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Detail.parent':'Detail']
+		this.properties << ['Detail.fieldNames':'Key,DetailLine']
+		this.properties << ['Detail.keyFieldValue':'D']
+		this.properties << ['defaultFieldSeparator':',']
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Value in 'Detail.parent' cannot be the same as substructure name"
 	}
 
 	def 'Plain > XML - exception is thrown when invalid parent specified'() {
@@ -220,7 +318,44 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.outputFileName = 'DeepPlain2XML_Scenario1_output.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - exception is thrown when record type cannot be determined from input file'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Count']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Count.fieldNames':'Type,Count']
+		this.properties << ['Count.keyFieldValue':'COUNT']
+		this.properties << ['Count.parent':'Root']
+		this.properties << ['Count.fieldSeparator':':']
+		this.inputFileName = 'DeepPlain2XML_Scenario5a.txt'
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Unable to determine record type for line 1"
+	}
+
+	def 'Plain > XML - Tab delimited input with default separator'() {
+		given:
+		this.properties << ['documentName':'Test']
+		this.properties << ['documentNamespace':'http://test.com']
+		this.properties << ['recordsetStructure':'SatzartWB']
+		this.properties << ['keyFieldName':'Satzart']
+		this.properties << ['SatzartWB.fieldNames':'Satzart,Field2,Field3,Field4,Field5,Field6,Field7,Field8,Field9,Field10,Field11,Field12,Field13,Field14,Field15,Field16,Field17']
+		this.properties << ['SatzartWB.keyFieldValue':'WB']
+		this.properties << ['SatzartWB.parent':'Root']
+		this.properties << ['defaultFieldSeparator':"'0x09'"]
+		this.properties << ['indentFactor':'2']
+		this.inputFileName = 'DeepPlain2XML_Scenario6.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario6_output.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Plain > XML - Fixed length input without indent'() {
@@ -246,45 +381,41 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.properties << ['Order.fieldFixedLengths':'5,10,10']
 		this.properties << ['Item.fieldFixedLengths':'5,10,10,10']
 		this.properties << ['trimContents':'N']
-		//this.properties << ['indentFactor':'2']
 		this.inputFileName = 'DeepPlain2XML_Scenario2.txt'
 		this.outputFileName = 'DeepPlain2XML_Scenario2_output.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
-
-	def 'Plain > XML - CSV input with default separator'() {
+	
+	def 'Plain > XML - Fixed length input with key field not in first position'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
 		this.properties << ['documentNamespace':'urn:equalize:com']
-		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,Item']
 		this.properties << ['keyFieldName':'Type']
-		this.properties << ['Header.fieldNames':'Type,FileName']
+		this.properties << ['Header.fieldNames':'FileName,Type']
 		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
 		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
-		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
 		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
-		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
 		this.properties << ['Header.keyFieldValue':'H']
 		this.properties << ['Delivery.keyFieldValue':'D']
 		this.properties << ['Order.keyFieldValue':'O']
-		this.properties << ['OrderText.keyFieldValue':'T']
 		this.properties << ['Item.keyFieldValue':'I']
-		this.properties << ['Footer.keyFieldValue':'F']
 		this.properties << ['Header.parent':'Root']
 		this.properties << ['Delivery.parent':'Root']
 		this.properties << ['Order.parent':'Delivery']
-		this.properties << ['OrderText.parent':'Order']
 		this.properties << ['Item.parent':'Order']
-		this.properties << ['Footer.parent':'Root']
-		this.properties << ['defaultFieldSeparator':',']
-		this.properties << ['indentFactor':'2']
-		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
-		this.outputFileName = 'DeepPlain2XML_Scenario3_output.xml'
+		this.properties << ['Header.fieldFixedLengths':'20,5']
+		this.properties << ['Delivery.fieldFixedLengths':'5,10']
+		this.properties << ['Order.fieldFixedLengths':'5,10,10']
+		this.properties << ['Item.fieldFixedLengths':'5,10,10,10']
+		this.properties << ['trimContents':'N']
+		this.inputFileName = 'DeepPlain2XML_Scenario2a.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario2a_output.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Plain > XML - Fixed length input with contents not trimmed'() {
@@ -315,29 +446,7 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.outputFileName = 'DeepPlain2XML_Scenario4_output.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
-	}
-
-	def 'Plain > XML - CSV input with generic record type'() {
-		given:
-		this.properties << ['documentName':'MT_DeepPlain2XML']
-		this.properties << ['documentNamespace':'urn:equalize:com']
-		this.properties << ['recordsetStructure':'Line,Count']
-		this.properties << ['genericRecordType':'Line']
-		this.properties << ['keyFieldName':'Type']
-		this.properties << ['Line.fieldNames':'FirstName,LastName,PostCode,Date']
-		this.properties << ['Count.fieldNames':'Type,Count']
-		this.properties << ['Count.keyFieldValue':'COUNT']
-		this.properties << ['Line.parent':'Root']
-		this.properties << ['Count.parent':'Root']
-		this.properties << ['Line.fieldSeparator':';']
-		this.properties << ['Count.fieldSeparator':':']
-		this.properties << ['indentFactor':'2']
-		this.inputFileName = 'DeepPlain2XML_Scenario5a.txt'
-		this.outputFileName = 'DeepPlain2XML_Scenario5a_output.xml'
-
-		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Plain > XML - Fixed length input with generic record type'() {
@@ -363,28 +472,10 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.outputFileName = 'DeepPlain2XML_Scenario5b_output.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
-	def 'Plain > XML - Default tab delimited input'() {
-		given:
-		this.properties << ['documentName':'Test']
-		this.properties << ['documentNamespace':'http://test.com']
-		this.properties << ['recordsetStructure':'SatzartWB']
-		this.properties << ['keyFieldName':'Satzart']
-		this.properties << ['SatzartWB.fieldNames':'Satzart,Field2,Field3,Field4,Field5,Field6,Field7,Field8,Field9,Field10,Field11,Field12,Field13,Field14,Field15,Field16,Field17']
-		this.properties << ['SatzartWB.keyFieldValue':'WB']
-		this.properties << ['SatzartWB.parent':'Root']
-		this.properties << ['defaultFieldSeparator':"'0x09'"]
-		this.properties << ['indentFactor':'2']
-		this.inputFileName = 'DeepPlain2XML_Scenario6.txt'
-		this.outputFileName = 'DeepPlain2XML_Scenario6_output.xml'
-
-		expect:
-		process() == this.expectedOutputFile.text
-	}
-
-	def 'Plain > XML - missing last fields - ignore'() {
+	def 'Plain > XML - Fixed length input with missing last fields - ignore'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
 		this.properties << ['documentNamespace':'urn:equalize:com']
@@ -409,13 +500,13 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.properties << ['trimContents':'N']
 		this.properties << ['indentFactor':'2']
 		this.inputFileName = 'DeepPlain2XML_Scenario7.txt'
-		this.outputFileName = 'DeepPlain2XML_Scenario7_ignore_output.xml'
+		this.outputFileName = 'DeepPlain2XML_Scenario7_output_missing_ignore.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
-	def 'Plain > XML - missing last fields - add'() {
+	def 'Plain > XML - Fixed length input with missing last fields - add'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
 		this.properties << ['documentNamespace':'urn:equalize:com']
@@ -441,13 +532,13 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.properties << ['indentFactor':'2']
 		this.properties << ['Delivery.missingLastFields':'add']
 		this.inputFileName = 'DeepPlain2XML_Scenario7.txt'
-		this.outputFileName = 'DeepPlain2XML_Scenario7_output.xml'
+		this.outputFileName = 'DeepPlain2XML_Scenario7_output_missing_add.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
-	def 'Plain > XML - missing last fields - error'() {
+	def 'Plain > XML - Fixed length input with missing last fields - error'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
 		this.properties << ['documentNamespace':'urn:equalize:com']
@@ -482,15 +573,15 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		e.message == "Line 2 has less fields than configured"
 	}
 
-	def 'Plain > XML - additional last fields - error'() {
+	def 'Plain > XML - Fixed length input with additional last fields - ignore'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']
 		this.properties << ['documentNamespace':'urn:equalize:com']
 		this.properties << ['recordsetStructure':'Header,Delivery,Order,Item']
 		this.properties << ['keyFieldName':'Type']
 		this.properties << ['Header.fieldNames':'Type,FileName']
-		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo,Dummy']
-		this.properties << ['Order.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type']
 		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
 		this.properties << ['Header.keyFieldValue':'H']
 		this.properties << ['Delivery.keyFieldValue':'D']
@@ -501,8 +592,39 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.properties << ['Order.parent':'Delivery']
 		this.properties << ['Item.parent':'Order']
 		this.properties << ['Header.fieldFixedLengths':'5,20']
-		this.properties << ['Delivery.fieldFixedLengths':'5,10,10']
-		this.properties << ['Order.fieldFixedLengths':'5,10']
+		this.properties << ['Delivery.fieldFixedLengths':'5,10']
+		this.properties << ['Order.fieldFixedLengths':'5']
+		this.properties << ['Item.fieldFixedLengths':'5,10,10,10']
+		this.properties << ['trimContents':'N']
+		this.properties << ['indentFactor':'2']
+		this.inputFileName = 'DeepPlain2XML_Scenario7.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario7_output_additional_ignore.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - Fixed length input with additional last fields - error'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,Item']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Type,FileName']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Header.fieldFixedLengths':'5,20']
+		this.properties << ['Delivery.fieldFixedLengths':'5,10']
+		this.properties << ['Order.fieldFixedLengths':'5']
 		this.properties << ['Item.fieldFixedLengths':'5,10,10,10']
 		this.properties << ['trimContents':'N']
 		this.properties << ['indentFactor':'2']
@@ -515,6 +637,238 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		then:
 		ConverterException e = thrown()
 		e.message == "Line 3 has more fields than configured"
+	}
+
+	def 'Plain > XML - CSV input with key field missing in input'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Dummy,FileName,Type']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['OrderText.keyFieldValue':'T']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Footer.keyFieldValue':'F']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['OrderText.parent':'Order']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Footer.parent':'Root']
+		this.properties << ['defaultFieldSeparator':',']
+		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Unable to determine record type for line 1"
+	}
+
+	def 'Plain > XML - CSV input with generic record type'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Line,Count']
+		this.properties << ['genericRecordType':'Line']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Line.fieldNames':'FirstName,LastName,PostCode,Date']
+		this.properties << ['Count.fieldNames':'Type,Count']
+		this.properties << ['Count.keyFieldValue':'COUNT']
+		this.properties << ['Line.parent':'Root']
+		this.properties << ['Count.parent':'Root']
+		this.properties << ['Line.fieldSeparator':';']
+		this.properties << ['Count.fieldSeparator':':']
+		this.properties << ['indentFactor':'2']
+		this.inputFileName = 'DeepPlain2XML_Scenario5a.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario5a_output.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - CSV input with missing last fields - ignore'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Type,FileName,MoreField']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['OrderText.keyFieldValue':'T']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Footer.keyFieldValue':'F']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['OrderText.parent':'Order']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Footer.parent':'Root']
+		this.properties << ['defaultFieldSeparator':',']
+		this.properties << ['indentFactor':'2']
+		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario3_output_missing_ignore.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - CSV input with missing last fields - add'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Type,FileName,MoreField']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['OrderText.keyFieldValue':'T']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Footer.keyFieldValue':'F']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['OrderText.parent':'Order']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Footer.parent':'Root']
+		this.properties << ['defaultFieldSeparator':',']
+		this.properties << ['indentFactor':'2']
+		this.properties << ['Header.missingLastFields':'add']
+		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario3_output_missing_add.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - CSV input with missing last fields - error'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Type,FileName,MoreField']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['OrderText.keyFieldValue':'T']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Footer.keyFieldValue':'F']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['OrderText.parent':'Order']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Footer.parent':'Root']
+		this.properties << ['defaultFieldSeparator':',']
+		this.properties << ['indentFactor':'2']
+		this.properties << ['Header.missingLastFields':'error']
+		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Line 1 has less fields than configured"
+	}
+
+	def 'Plain > XML - CSV input with additional last fields - ignore'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Type,FileName']
+		this.properties << ['Delivery.fieldNames':'Type']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['OrderText.keyFieldValue':'T']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Footer.keyFieldValue':'F']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['OrderText.parent':'Order']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Footer.parent':'Root']
+		this.properties << ['defaultFieldSeparator':',']
+		this.properties << ['indentFactor':'2']
+		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario3_output_additional_ignore.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+
+	}
+
+	def 'Plain > XML - CSV input with additional last fields - error'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Header.fieldNames':'Type,FileName']
+		this.properties << ['Delivery.fieldNames':'Type']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['OrderText.fieldNames':'Type,OrderNo,TextValue']
+		this.properties << ['Item.fieldNames':'Type,OrderNo,ItemNo,Quantity']
+		this.properties << ['Footer.fieldNames':'Type,DeliveryCount']
+		this.properties << ['Header.keyFieldValue':'H']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['OrderText.keyFieldValue':'T']
+		this.properties << ['Item.keyFieldValue':'I']
+		this.properties << ['Footer.keyFieldValue':'F']
+		this.properties << ['Header.parent':'Root']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['OrderText.parent':'Order']
+		this.properties << ['Item.parent':'Order']
+		this.properties << ['Footer.parent':'Root']
+		this.properties << ['defaultFieldSeparator':',']
+		this.properties << ['indentFactor':'2']
+		this.properties << ['Delivery.additionalLastFields':'error']
+		this.inputFileName = 'DeepPlain2XML_Scenario3.txt'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Line 2 has more fields than configured"
 	}
 
 	def 'Plain > XML - enclosureSignEnd and enclosureSignEndEscape'() {
@@ -539,6 +893,29 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		this.outputFileName = 'DeepPlain2XML_Scenario1a_output.xml'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Plain > XML - exception is thrown when parent line is missing in input file'() {
+		given:
+		this.properties << ['documentName':'MT_DeepPlain2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['recordsetStructure':'Delivery,Order']
+		this.properties << ['keyFieldName':'Type']
+		this.properties << ['Delivery.fieldNames':'Type,DeliveryNo']
+		this.properties << ['Order.fieldNames':'Type,DeliveryNo,OrderNo']
+		this.properties << ['Delivery.keyFieldValue':'D']
+		this.properties << ['Order.keyFieldValue':'O']
+		this.properties << ['Delivery.parent':'Root']
+		this.properties << ['Order.parent':'Delivery']
+		this.properties << ['defaultFieldSeparator':',']
+		this.inputFileName = 'DeepPlain2XML_Scenario1b.txt'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Cannot find parent for line 1: Record Type = Order"
 	}
 }

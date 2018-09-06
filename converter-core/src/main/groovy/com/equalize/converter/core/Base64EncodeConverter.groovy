@@ -19,16 +19,15 @@ class Base64EncodeConverter extends AbstractConverter {
 	}
 
 	@Override
-	void getParameters() {
-		this.outputType = this.ph.getProperty('outputType')
-		if(this.outputType)
-			this.ph.checkValidValues('outputType', this.outputType, ['plain', 'xml'] as Set)
+	void retrieveParameters() {
+		this.outputType = this.ph.retrieveProperty('outputType')
+		this.ph.checkValidValues('outputType', this.outputType, ['plain', 'xml'] as Set)
 
-		this.compress = this.ph.getPropertyAsBoolean('compress', 'N')
+		this.compress = this.ph.retrievePropertyAsBoolean('compress', 'N')
 		if(this.outputType == 'xml') {
-			this.documentName = this.ph.getProperty('documentName')
-			this.documentNamespace = this.ph.getProperty('documentNamespace')
-			this.base64FieldName = this.ph.getProperty('base64FieldName','base64Content')
+			this.documentName = this.ph.retrieveProperty('documentName')
+			this.documentNamespace = this.ph.retrieveProperty('documentNamespace')
+			this.base64FieldName = this.ph.retrieveProperty('base64FieldName','base64Content')
 		}
 	}
 
@@ -41,16 +40,17 @@ class Base64EncodeConverter extends AbstractConverter {
 	Object generateOutput() {
 		ConversionBase64Encode encoder = new ConversionBase64Encode(this.content)
 		def base64String = encoder.encode(this.compress, 'Base64.txt')
-		if(this.outputType == 'xml') {
-			ConversionDOMOutput domOut = new ConversionDOMOutput(this.documentName, this.documentNamespace)
-			List<Field> xmlContent = new ArrayList<Field>()
-			xmlContent.add(new Field(this.base64FieldName, base64String))
+		switch (this.outputType) {
+			case 'xml':
+				ConversionDOMOutput domOut = new ConversionDOMOutput(this.documentName, this.documentNamespace)
+				List<Field> xmlContent = new ArrayList<Field>()
+				xmlContent.add(new Field(this.base64FieldName, base64String))
 
-			domOut.setIndentFactor(2)
-			ByteArrayOutputStream baos = domOut.generateDOMOutput(xmlContent)
-			baos.toByteArray()
-		} else {
-			base64String.getBytes('UTF-8')
+				domOut.setIndentFactor(2)
+				ByteArrayOutputStream baos = domOut.generateDOMOutput(xmlContent)
+				return baos.toByteArray()
+			case 'plain':
+				return base64String.getBytes('UTF-8')
 		}
 	}
 }

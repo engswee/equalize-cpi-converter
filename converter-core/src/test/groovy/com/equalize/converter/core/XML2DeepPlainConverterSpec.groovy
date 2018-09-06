@@ -34,7 +34,7 @@ class XML2DeepPlainConverterSpec extends Specification {
 		def fcb = new FormatConversionBean(this.exchange, properties)
 		byte[] output = fcb.convert()
 
-		String generatedOutput = new String(output)
+		String generatedOutput = new String(output, 'UTF-8')
 		// Output is generated with system native line endings
 		// So on Windows, replace CRLF so that it matches sample output
 		if (newLine == '\r\n')
@@ -94,6 +94,19 @@ class XML2DeepPlainConverterSpec extends Specification {
 		e.message == "Use only parameter 'Header.fieldSeparator'/'defaultFieldSeparator' or 'Header.fieldFixedLengths', not both"
 	}
 
+	def 'XML > Plain - exception is thrown when duplicate found in recordsetStructure'() {
+		given:
+		this.properties << ['recordsetStructure':'Header,Header']
+		this.properties << ['defaultFieldSeparator':',']
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Duplicate field found in 'recordsetStructure': Header"
+	}
+
 	def 'XML > Plain - Comma/tab output with custom end separator'() {
 		given:
 		this.properties << ['recordsetStructure':'Delivery,Order,Item']
@@ -105,7 +118,43 @@ class XML2DeepPlainConverterSpec extends Specification {
 		this.outputFileName = 'XML2DeepPlain_Scenario1_output.txt'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'XML > Plain - CSV output with default field separator'() {
+		given:
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['defaultFieldSeparator':',']
+		this.inputFileName = 'XML2DeepPlain_Scenario3.xml'
+		this.outputFileName = 'XML2DeepPlain_Scenario3_output.txt'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'XML > Plain - CSV output with certain segments without fields'() {
+		given:
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['defaultFieldSeparator':',']
+		this.inputFileName = 'XML2DeepPlain_Scenario4.xml'
+		this.outputFileName = 'XML2DeepPlain_Scenario4_output.txt'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'XML > Plain - exception is thrown when XML input has segments not matching structure in recordsetStructure'() {
+		given:
+		this.properties << ['recordsetStructure':'Header,Delivery']
+		this.properties << ['defaultFieldSeparator':',']
+		this.inputFileName = 'XML2DeepPlain_Scenario3.xml'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Record Type Order not listed in parameter 'recordsetStructure'"
 	}
 
 	def 'XML > Plain - fixedLengthTooShortHandling - error'() {
@@ -135,7 +184,7 @@ class XML2DeepPlainConverterSpec extends Specification {
 		this.outputFileName = 'XML2DeepPlain_Scenario2a_output.txt'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'XML > Plain - fixedLengthTooShortHandling - ignore'() {
@@ -149,17 +198,22 @@ class XML2DeepPlainConverterSpec extends Specification {
 		this.outputFileName = 'XML2DeepPlain_Scenario2b_output.txt'
 
 		expect:
-		process() == this.expectedOutputFile.text
+		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
-	def 'XML > Plain - Comma as default field separator'() {
+	def 'XML > Plain - more fields in input than specified in fieldFixedLengths'() {
 		given:
-		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
-		this.properties << ['defaultFieldSeparator':',']
-		this.inputFileName = 'XML2DeepPlain_Scenario3.xml'
-		this.outputFileName = 'XML2DeepPlain_Scenario3_output.txt'
+		this.properties << ['recordsetStructure':'Delivery,Order,Item']
+		this.properties << ['Delivery.fieldFixedLengths':'5']
+		this.properties << ['Order.fieldFixedLengths':'5,10,10']
+		this.properties << ['Item.fieldFixedLengths':'5,5,10,10']
+		this.inputFileName = 'XML2DeepPlain_Scenario2.xml'
 
-		expect:
-		process() == this.expectedOutputFile.text
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "More fields found in XML structure than specified in parameter 'Delivery.fieldFixedLengths'"
 	}
 }

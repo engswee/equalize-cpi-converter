@@ -2,8 +2,8 @@ package com.equalize.converter.core.fcc
 
 import com.equalize.converter.core.util.ConverterException
 import com.equalize.converter.core.util.Field
-import com.equalize.converter.core.util.MyStringTokenizer
 import com.equalize.converter.core.util.PropertyHelper
+import com.sap.aii.af.sdk.xi.adapter.MyStringTokenizer
 
 class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 	boolean enclosureConversion
@@ -16,21 +16,21 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 		super(fieldSeparator, fixedLengths)
 	}
 
-	void setAdditionalParameters(String recordTypeName, String[] recordsetList, PropertyHelper param) throws ConverterException {
-		super.setAdditionalParameters(recordTypeName, recordsetList, param)
-		setKeyFieldParameters(recordTypeName, param, true)
+	void storeAdditionalParameters(String recordTypeName, String[] recordsetList, PropertyHelper param) {
+		super.storeAdditionalParameters(recordTypeName, recordsetList, param)
+		storeKeyFieldParameters(recordTypeName, param, true)
 		// Enclosure signs
-		this.enclBegin = param.getProperty("${recordTypeName}.enclosureSignBegin", '')
-		this.enclEnd = param.getProperty("${recordTypeName}.enclosureSignEnd", this.enclBegin)
-		this.enclBeginEsc = param.getProperty("${recordTypeName}.enclosureSignBeginEscape", '')
-		this.enclEndEsc = param.getProperty("${recordTypeName}.enclosureSignEndEscape", this.enclBeginEsc)
-		this.enclosureConversion = param.getPropertyAsBoolean("${recordTypeName}.enclosureConversion", 'Y')
+		this.enclBegin = param.retrieveProperty("${recordTypeName}.enclosureSignBegin", '')
+		this.enclEnd = param.retrieveProperty("${recordTypeName}.enclosureSignEnd", this.enclBegin)
+		this.enclBeginEsc = param.retrieveProperty("${recordTypeName}.enclosureSignBeginEscape", '')
+		this.enclEndEsc = param.retrieveProperty("${recordTypeName}.enclosureSignEndEscape", this.enclBeginEsc)
+		this.enclosureConversion = param.retrievePropertyAsBoolean("${recordTypeName}.enclosureConversion", 'Y')
 	}
 
 	String parseKeyFieldValue(String lineInput) {
 		String currentLineKeyFieldValue = null
 		String[] inputFieldContents = splitLineBySeparator(lineInput)
-		if (this.keyFieldIndex <= inputFieldContents.length) {
+		if (this.keyFieldIndex < inputFieldContents.length) {
 			if (inputFieldContents[this.keyFieldIndex] == this.keyFieldValue) {
 				currentLineKeyFieldValue = this.keyFieldValue
 			}
@@ -38,7 +38,7 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 		return currentLineKeyFieldValue
 	}
 
-	Field[] extractLineContents(String lineInput, boolean trim, int lineIndex) throws ConverterException {
+	Field[] extractLineContents(String lineInput, boolean trim, int lineIndex) {
 		List<Field> fields = new ArrayList<Field>()
 
 		String[] inputFieldContents = splitLineBySeparator(lineInput)
@@ -52,15 +52,17 @@ class RecordTypeParametersPlain2XMLCSV extends RecordTypeParametersPlain2XML {
 			}
 			// Content has more fields than specified in configuration
 		} else if (inputFieldContents.length > this.fieldNames.length) {
-			outputSize = this.fieldNames.length // Default to length of configuration fields
 			if (this.additionalLastFields.toLowerCase() == 'error') {
-				throw new ConverterException("Line ${lineIndex+1}  has more fields than configured")
+				throw new ConverterException("Line ${lineIndex+1} has more fields than configured")
+			} else {
+				// Default to length of configuration fields
+				outputSize = this.fieldNames.length
 			}
 		}
 		for (int i = 0; i < outputSize; i++) {
 			String content = ''
 			if (i < inputFieldContents.length) {
-				content = (inputFieldContents[i] == null) ? '' : inputFieldContents[i]
+				content = inputFieldContents[i]
 			}
 			fields.add(createNewField(this.fieldNames[i], content, trim))
 		}

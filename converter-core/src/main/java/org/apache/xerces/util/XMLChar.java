@@ -1,4 +1,4 @@
-package com.equalize.converter.core.util;
+package org.apache.xerces.util;
 
 // Copy of org.apache.xerces.util.XMLChar
 

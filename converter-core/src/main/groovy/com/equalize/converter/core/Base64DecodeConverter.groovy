@@ -17,30 +17,32 @@ class Base64DecodeConverter extends AbstractConverter {
 	}
 
 	@Override
-	void getParameters() {
-		this.inputType = this.ph.getProperty('inputType')
-		if(this.inputType)
-			this.ph.checkValidValues('inputType', this.inputType, ['plain', 'xml'] as Set)
+	void retrieveParameters() {
+		this.inputType = this.ph.retrieveProperty('inputType')
+		this.ph.checkValidValues('inputType', this.inputType, ['plain', 'xml'] as Set)
 
-		this.zippedContent = this.ph.getPropertyAsBoolean('zippedContent', 'N')
+		this.zippedContent = this.ph.retrievePropertyAsBoolean('zippedContent', 'N')
 		if(this.inputType == 'xml')
-			this.xpath = this.ph.getProperty('xpath')
+			this.xpath = this.ph.retrieveProperty('xpath')
 	}
 
 	@Override
 	void parseInput() {
-		if(this.inputType == 'plain') {
-			this.base64String = this.typeConverter.convertTo(String, this.body)
-		} else if(this.inputType == 'xml') {
-			def is =  this.typeConverter.convertTo(InputStream, this.body)
-			ConversionDOMInput domIn = new ConversionDOMInput(is)
-			this.base64String = domIn.evaluateXPathToString(this.xpath)
+		switch(this.inputType) {
+			case 'plain':
+				this.base64String = this.typeConverter.convertTo(String, this.body)
+				break
+			case 'xml':
+				def is =  this.typeConverter.convertTo(InputStream, this.body)
+				ConversionDOMInput domIn = new ConversionDOMInput(is)
+				this.base64String = domIn.evaluateXPathToString(this.xpath)
+				break
 		}
 	}
 
 	@Override
 	Object generateOutput() {
 		ConversionBase64Decode decoder = new ConversionBase64Decode(this.base64String, this.zippedContent)
-		byte[] content = decoder.decode()
+		decoder.decode()
 	}
 }

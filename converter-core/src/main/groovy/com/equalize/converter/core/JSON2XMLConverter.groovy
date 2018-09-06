@@ -21,15 +21,15 @@ class JSON2XMLConverter extends AbstractConverter {
 	}
 
 	@Override
-	void getParameters() {
-		this.documentName = this.ph.getProperty('documentName')
-		this.documentNamespace = this.ph.getProperty('documentNamespace')
-		this.indentFactor = this.ph.getPropertyAsInt('indentFactor', '0')
-		this.escapeInvalidNameStartChar = this.ph.getPropertyAsBoolean('escapeInvalidNameStartChar', 'N')
-		this.mangleInvalidNameChar = this.ph.getPropertyAsBoolean('mangleInvalidNameChar', 'N')
-		this.allowArrayAtTop = this.ph.getPropertyAsBoolean('allowArrayAtTop', 'N')
+	void retrieveParameters() {
+		this.documentName = this.ph.retrieveProperty('documentName')
+		this.documentNamespace = this.ph.retrieveProperty('documentNamespace')
+		this.indentFactor = this.ph.retrievePropertyAsInt('indentFactor', '0')
+		this.escapeInvalidNameStartChar = this.ph.retrievePropertyAsBoolean('escapeInvalidNameStartChar', 'N')
+		this.mangleInvalidNameChar = this.ph.retrievePropertyAsBoolean('mangleInvalidNameChar', 'N')
+		this.allowArrayAtTop = this.ph.retrievePropertyAsBoolean('allowArrayAtTop', 'N')
 		if(this.allowArrayAtTop)
-			this.topArrayName = this.ph.getProperty('topArrayName')
+			this.topArrayName = this.ph.retrieveProperty('topArrayName')
 	}
 
 	@Override

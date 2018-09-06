@@ -16,13 +16,14 @@ public class ConversionJSONInput {
 
 	public ConversionJSONInput(String input, String topArrayName) {
 		String content = input.trim();
+		Object top;
 		if (content.startsWith("[")) {
-			JSONArray topArray = new JSONArray(content);
-			this.jsonObj = new JSONObject();
-			this.jsonObj.put(topArrayName, topArray);
+			top = new JSONArray(content);
 		} else {
-			this.jsonObj = new JSONObject(content);
+			top = new JSONObject(content);
 		}
+		this.jsonObj = new JSONObject();
+		this.jsonObj.put(topArrayName, top);
 	}
 
 	public List<Field> extractJSONContent() {

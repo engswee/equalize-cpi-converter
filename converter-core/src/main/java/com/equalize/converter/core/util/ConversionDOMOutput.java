@@ -14,6 +14,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.xerces.util.XMLChar;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -49,28 +50,22 @@ public class ConversionDOMOutput {
 		this.indentFactor = indentFactor;
 	}
 
-	public boolean isEscapeInvalidNameStartChar() {
-		return this.escapeInvalidNameStartChar;
-	}
-
 	public void setEscapeInvalidNameStartChar(boolean escapeInvalidNameStartChar) {
 		this.escapeInvalidNameStartChar = escapeInvalidNameStartChar;
-	}
-
-	public boolean isMangleInvalidNameChar() {
-		return this.mangleInvalidNameChar;
 	}
 
 	public void setMangleInvalidNameChar(boolean mangleInvalidNameChar) {
 		this.mangleInvalidNameChar = mangleInvalidNameChar;
 	}
 
-	public ByteArrayOutputStream generateDOMOutput(List<Field> fieldList) throws TransformerException {
+	public ByteArrayOutputStream generateDOMOutput(List<Field> fieldList)
+			throws TransformerException, ConverterException {
 		constructDOMContent(this.rootNode, fieldList);
 		return convertDOMtoBAOS();
 	}
 
-	public void generateDOMOutput(List<Field> fieldList, OutputStream outStream) throws TransformerException {
+	public void generateDOMOutput(List<Field> fieldList, OutputStream outStream)
+			throws TransformerException, ConverterException {
 		constructDOMContent(this.rootNode, fieldList);
 		convertDOMtoOutputStream(outStream);
 	}
@@ -92,7 +87,7 @@ public class ConversionDOMOutput {
 		return baos;
 	}
 
-	private void constructDOMContent(Node parentNode, List<Field> fieldList) throws TransformerException {
+	private void constructDOMContent(Node parentNode, List<Field> fieldList) throws ConverterException {
 		// Go through each entry of the List
 		for (int i = 0; i < fieldList.size(); i++) {
 			Field field = fieldList.get(i);
@@ -100,7 +95,7 @@ public class ConversionDOMOutput {
 		}
 	}
 
-	private void constructDOMContent(Node parentNode, String keyName, Object[] contents) throws TransformerException {
+	private void constructDOMContent(Node parentNode, String keyName, Object[] contents) throws ConverterException {
 		// Go through each item of the array
 		for (Object entry : contents) {
 			constructDOMContent(parentNode, keyName, entry);
@@ -108,7 +103,7 @@ public class ConversionDOMOutput {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void constructDOMContent(Node parentNode, String keyName, Object fieldContent) throws TransformerException {
+	private void constructDOMContent(Node parentNode, String keyName, Object fieldContent) throws ConverterException {
 		if (fieldContent instanceof Object[]) {
 			constructDOMContent(parentNode, keyName, (Object[]) fieldContent);
 		} else if (fieldContent instanceof List<?>) {
@@ -121,7 +116,7 @@ public class ConversionDOMOutput {
 		}
 	}
 
-	private Node addElementToNode(Node parentNode, String elementName) throws TransformerException {
+	private Node addElementToNode(Node parentNode, String elementName) throws ConverterException {
 		try {
 			Node element = null;
 			if (this.escapeInvalidNameStartChar || this.mangleInvalidNameChar) {
@@ -132,16 +127,15 @@ public class ConversionDOMOutput {
 			parentNode.appendChild(element);
 			return element;
 		} catch (DOMException e) {
-			throw new TransformerException("Invalid character in XML element name: " + elementName, e);
+			throw new ConverterException("Invalid character in XML element name: " + elementName);
 		}
 	}
 
 	private Node addElementToNode(Node parentNode, String elementName, String elementTextValue)
-			throws TransformerException {
+			throws ConverterException {
 		Node element = addElementToNode(parentNode, elementName);
-		if (elementTextValue != null) {
-			element.appendChild(this.doc.createTextNode(elementTextValue));
-		}
+		element.appendChild(this.doc.createTextNode(elementTextValue));
+
 		return element;
 	}
 

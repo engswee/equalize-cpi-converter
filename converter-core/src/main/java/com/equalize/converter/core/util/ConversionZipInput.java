@@ -21,7 +21,7 @@ public class ConversionZipInput {
 		this.zis = new ZipInputStream(new ByteArrayInputStream(content));
 	}
 
-	public Map<String, byte[]> getEntriesContent() throws IOException {
+	public Map<String, byte[]> retrieveEntriesContent() throws IOException {
 		ZipEntry ze = null;
 		Map<String, byte[]> map = new LinkedHashMap<String, byte[]>();
 

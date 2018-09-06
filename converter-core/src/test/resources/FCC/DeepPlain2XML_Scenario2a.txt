@@ -1,5 +1,5 @@
-H    Shipment123.txt
+Shipment123.txt     H
 D    Delivery1
-O    Delivery1
+O    Delivery1 Order1_A
 I    Order1_A  10        50
 I    Order1_A  20

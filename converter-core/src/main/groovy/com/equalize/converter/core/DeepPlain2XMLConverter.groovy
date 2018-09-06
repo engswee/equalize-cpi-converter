@@ -11,7 +11,6 @@ import com.equalize.converter.core.util.Field
 
 class DeepPlain2XMLConverter extends AbstractConverter {
 	ConversionPlainInput plainIn
-	ConversionDOMOutput domOut
 	String documentName
 	String documentNamespace
 	int indentFactor
@@ -29,18 +28,18 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 	}
 
 	@Override
-	void getParameters() {
-		this.encoding = this.ph.getProperty('encoding', 'UTF-8')
-		this.documentName = this.ph.getProperty('documentName')
-		this.documentNamespace = this.ph.getProperty('documentNamespace')
-		this.indentFactor = this.ph.getPropertyAsInt('indentFactor', '0')
-		this.recordsetStructure = this.ph.getProperty('recordsetStructure')
-		this.rowOffset = this.ph.getPropertyAsInt('rowOffset', '0')
-		this.trimContents = this.ph.getPropertyAsBoolean('trimContents', 'Y')
-		this.genericRecordType = this.ph.getProperty('genericRecordType', '')
+	void retrieveParameters() {
+		this.encoding = this.ph.retrieveProperty('encoding', 'UTF-8')
+		this.documentName = this.ph.retrieveProperty('documentName')
+		this.documentNamespace = this.ph.retrieveProperty('documentNamespace')
+		this.indentFactor = this.ph.retrievePropertyAsInt('indentFactor', '0')
+		this.recordsetStructure = this.ph.retrieveProperty('recordsetStructure')
+		this.rowOffset = this.ph.retrievePropertyAsInt('rowOffset', '0')
+		this.trimContents = this.ph.retrievePropertyAsBoolean('trimContents', 'Y')
+		this.genericRecordType = this.ph.retrieveProperty('genericRecordType', '')
 		// Get the parameters for each substructure type
 		String[] recordsetList = this.recordsetStructure.split(',')
-		for (String recordTypeName : recordsetList) {
+		recordsetList.each { recordTypeName ->
 			if (recordTypeName == 'Root') {
 				throw new ConverterException("'Root' is a reserved name and not allowed in parameter 'recordsetStructure'")
 			}
@@ -48,8 +47,10 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 				RecordTypeParametersPlain2XML rtp = (RecordTypeParametersPlain2XML) RecordTypeParametersFactory
 						.newInstance()
 						.newParameter(recordTypeName, recordsetList, this.encoding, this.ph, 'plain2xml')
-				rtp.setAdditionalParameters(recordTypeName, recordsetList, this.ph)
+				rtp.storeAdditionalParameters(recordTypeName, recordsetList, this.ph)
 				this.recordTypes.put(recordTypeName, rtp)
+			} else {
+				throw new ConverterException("Duplicate field found in 'recordsetStructure': $recordTypeName")
 			}
 		}
 	}
@@ -65,13 +66,13 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 	@Override
 	Object generateOutput() {
 		// Create output converter and generate output DOM
-		this.domOut = new ConversionDOMOutput(this.documentName, this.documentNamespace)
+		ConversionDOMOutput domOut = new ConversionDOMOutput(this.documentName, this.documentNamespace)
 
 		// Generate OutputStream from DOM
 		if (this.indentFactor > 0) {
-			this.domOut.setIndentFactor(this.indentFactor)
+			domOut.setIndentFactor(this.indentFactor)
 		}
-		this.domOut.generateDOMOutput(this.nestedContents).toByteArray()
+		domOut.generateDOMOutput(this.nestedContents).toByteArray()
 	}
 
 	private List<Field> generateNestedContents(){
@@ -86,8 +87,7 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 			String currentLine = rawLineContents.get(i)
 			// Determine record type for line
 			String lineRecordType = determineRecordType(currentLine, i)
-			// Extract the content of line into node containing field-value
-			// pairs
+			// Extract the content of line into node containing field-value pairs
 			List<Field> lineNode = extractLineToFieldList(lineRecordType, currentLine, i)
 			// Get the parent node for current line from stack
 			List<Field> parentNode = getParentNode(depthStack, lineRecordType, i + 1, lineNode)
@@ -106,17 +106,16 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 				return keyName
 			}
 		}
-		if (this.genericRecordType != null) {
+		if (this.genericRecordType) {
 			return this.genericRecordType
 		} else {
-			throw new ConverterException('Unable to determine record type for line ' + (lineIndex + 1))
+			throw new ConverterException("Unable to determine record type for line ${lineIndex+1}")
 		}
 	}
 
 	private List<Field> extractLineToFieldList(String lineRecordType, String lineInput, int lineIndex) {
 		List<Field> fieldList = new ArrayList<Field>()
-		// Extract the fields of the current line based on the line's record
-		// type
+		// Extract the fields of the current line based on the line's record type
 		Field[] currentLineFields = this.recordTypes.get(lineRecordType).extractLineContents(lineInput,
 				this.trimContents, lineIndex)
 		for (Field field : currentLineFields) {
@@ -131,14 +130,11 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 		// Go through the stack in reverse order (from bottom) to determine
 		// which is the parent node
 		// Entries in the stack are repeatedly removed from the bottom if it
-		// does not match the
-		// current line's parent. This way we do a reverse traversal of the
-		// stack back to root
+		// does not match the current line's parent.
+		// This way we do a reverse traversal of the stack back to root
 		// to find the parent node
 		while (!found && stack.size() != 0) {
-			Field currentStackLevel = stack.get(stack.size() - 1) // Always get
-			// the last
-			// item
+			Field currentStackLevel = stack.get(stack.size() - 1) // Always get the last item
 			String parentRecordType = this.recordTypes.get(lineRecordType).parentRecordType
 			String[] stackKey = currentStackLevel.fieldName.split(':')
 			// If the stack key matches the line's parent type, then get the
@@ -153,7 +149,7 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 			}
 		}
 		if (parentNode == null) {
-			throw new ConverterException('Cannot find parent for line ' + lineNo + ': Record Type = ' + lineRecordType)
+			throw new ConverterException("Cannot find parent for line $lineNo: Record Type = $lineRecordType")
 		}
 		return parentNode
 	}

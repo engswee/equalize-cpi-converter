@@ -6,7 +6,7 @@
 
 	<groupId>com.equalize.cpi</groupId>
 	<artifactId>converter-core</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 
 	<name>converter-core</name>
 	<url>http://www.equalize.com</url>
@@ -77,6 +77,20 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+				<version>4.3.0</version>
+				<configuration>
+					<excludes>
+						<exclude>**/org/json/*.java</exclude>
+						<exclude>**/org/apache/xerces/util/*.java</exclude>
+						<exclude>**/com/sap/aii/af/sdk/xi/adapter/trans/*.java</exclude>
+						<exclude>**/com/sap/aii/af/sdk/xi/adapter/*.java</exclude>
+						<exclude>**/ConverterStandaloneTester.groovy</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 

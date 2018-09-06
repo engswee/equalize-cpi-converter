@@ -7,13 +7,13 @@ class ConverterFactory {
 	private ConverterFactory() {
 	}
 
-	ConverterFactory newInstance() {
+	static ConverterFactory newInstance() {
 		new ConverterFactory()
 	}
 
 	AbstractConverter newConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
 		PropertyHelper ph = new PropertyHelper(properties)
-		String converterClassName = ph.getProperty('converterClass')
+		String converterClassName = ph.retrieveProperty('converterClass')
 		try {
 			// Dynamic loading and instantiation of converter class
 			Class<?> converterClass = Class.forName(converterClassName)

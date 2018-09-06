@@ -20,8 +20,8 @@ class PropertyHelperSpec extends Specification {
 
 	def 'String - value for available property is returned'() {
 		when: 'try to retrieve an existing property'
-		String content = this.ph.getProperty('stringParam')
-		String contentBlank = this.ph.getProperty('stringParamBlank')
+		String content = this.ph.retrieveProperty('stringParam')
+		String contentBlank = this.ph.retrieveProperty('stringParamBlank')
 
 		then: 'value of property is returned'
 		content == 'abcDEF'
@@ -30,7 +30,7 @@ class PropertyHelperSpec extends Specification {
 
 	def 'String - exception is triggered if mandatory parameter is not populated'() {
 		when: 'try to retrieve a missing mandatory property'
-		String content = this.ph.getProperty('mandatoryParam')
+		String content = this.ph.retrieveProperty('mandatoryParam')
 
 		then: 'Exception is thrown'
 		ConverterException e = thrown()
@@ -39,8 +39,8 @@ class PropertyHelperSpec extends Specification {
 
 	def 'String - default value is returned if optional parameter is not populated'() {
 		when: 'try to retrieve an missing optional property'
-		String content = this.ph.getProperty('optParam','XYZ123')
-		String contentBlank = this.ph.getProperty('optParamBlank','')
+		String content = this.ph.retrieveProperty('optParam','XYZ123')
+		String contentBlank = this.ph.retrieveProperty('optParamBlank','')
 
 		then: 'default value of property is returned'
 		content == 'XYZ123'
@@ -49,8 +49,8 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Integer - value for available property is returned'() {
 		when: 'try to retrieve an existing property'
-		int content = this.ph.getPropertyAsInt('intParam')
-		int contentZero = this.ph.getPropertyAsInt('intParamZero')
+		int content = this.ph.retrievePropertyAsInt('intParam')
+		int contentZero = this.ph.retrievePropertyAsInt('intParamZero')
 
 		then: 'value of property is returned'
 		content == 2
@@ -59,7 +59,7 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Integer - exception is triggered if mandatory parameter is not populated'() {
 		when: 'try to retrieve a missing mandatory property'
-		int content = this.ph.getPropertyAsInt('mandatoryIntParam')
+		int content = this.ph.retrievePropertyAsInt('mandatoryIntParam')
 
 		then: 'Exception is thrown'
 		ConverterException e = thrown()
@@ -68,8 +68,8 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Integer - default value is returned if optional parameter is not populated'() {
 		when: 'try to retrieve an missing optional property'
-		int content = this.ph.getPropertyAsInt('optIntParam','15')
-		int contentZero = this.ph.getPropertyAsInt('optIntParamZero','0')
+		int content = this.ph.retrievePropertyAsInt('optIntParam','15')
+		int contentZero = this.ph.retrievePropertyAsInt('optIntParamZero','0')
 
 		then: 'default value of property is returned'
 		content == 15
@@ -78,8 +78,8 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Boolean - value for available property is returned'() {
 		when: 'try to retrieve an existing property'
-		boolean content = this.ph.getPropertyAsBoolean('booleanParamYes')
-		boolean contentNo = this.ph.getPropertyAsBoolean('booleanParamNo')
+		boolean content = this.ph.retrievePropertyAsBoolean('booleanParamYes')
+		boolean contentNo = this.ph.retrievePropertyAsBoolean('booleanParamNo')
 
 		then: 'value of property is returned'
 		content == true
@@ -88,7 +88,7 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Boolean - exception is triggered if mandatory parameter is not populated'() {
 		when: 'try to retrieve a missing mandatory property'
-		boolean content = this.ph.getPropertyAsBoolean('mandatoryBoolParam')
+		boolean content = this.ph.retrievePropertyAsBoolean('mandatoryBoolParam')
 
 		then: 'Exception is thrown'
 		ConverterException e = thrown()
@@ -97,8 +97,8 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Boolean - default value is returned if optional parameter is not populated'() {
 		when: 'try to retrieve an missing optional property'
-		boolean content = this.ph.getPropertyAsBoolean('optBoolParamYes','Y')
-		boolean contentNo = this.ph.getPropertyAsBoolean('optBoolParamNo','N')
+		boolean content = this.ph.retrievePropertyAsBoolean('optBoolParamYes','Y')
+		boolean contentNo = this.ph.retrievePropertyAsBoolean('optBoolParamNo','N')
 
 		then: 'default value of property is returned'
 		content == true

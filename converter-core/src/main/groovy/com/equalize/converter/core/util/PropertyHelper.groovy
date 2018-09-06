@@ -7,7 +7,7 @@ class PropertyHelper {
 		this.properties = properties
 	}
 
-	String getProperty(String propertyName, String defaultValue) {
+	String retrieveProperty(String propertyName, String defaultValue) {
 		String propertyValue = this.properties.get(propertyName)
 		if(propertyValue == null) {
 			if(defaultValue != null)
@@ -18,24 +18,24 @@ class PropertyHelper {
 		return propertyValue
 	}
 
-	String getProperty(String propertyName) {
-		getProperty(propertyName, null)
+	String retrieveProperty(String propertyName) {
+		retrieveProperty(propertyName, null)
 	}
 
-	int getPropertyAsInt(String propertyName, String defaultValue) {
-		getProperty(propertyName, defaultValue) as int
+	int retrievePropertyAsInt(String propertyName, String defaultValue) {
+		retrieveProperty(propertyName, defaultValue) as int
 	}
 
-	int getPropertyAsInt(String propertyName) {
-		getPropertyAsInt(propertyName, null)
+	int retrievePropertyAsInt(String propertyName) {
+		retrievePropertyAsInt(propertyName, null)
 	}
 
-	boolean getPropertyAsBoolean(String propertyName, String defaultValue) {
-		getProperty(propertyName, defaultValue).toBoolean()
+	boolean retrievePropertyAsBoolean(String propertyName, String defaultValue) {
+		retrieveProperty(propertyName, defaultValue).toBoolean()
 	}
 
-	boolean getPropertyAsBoolean(String propertyName) {
-		getPropertyAsBoolean(propertyName, null)
+	boolean retrievePropertyAsBoolean(String propertyName) {
+		retrievePropertyAsBoolean(propertyName, null)
 	}
 
 	void checkValidValues(String propertyName, Object propertyValue, Set<Object> validValues) {

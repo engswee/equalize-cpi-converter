@@ -7,9 +7,10 @@
   <Delivery>
     <Type>D    </Type>
     <DeliveryNo>Delivery1</DeliveryNo>
+    <Dummy/>
     <Order>
       <Type>O    </Type>
-      <DeliveryNo>Delivery1 </DeliveryNo>
+      <DeliveryNo>Delivery1</DeliveryNo>
       <Item>
         <Type>I    </Type>
         <OrderNo>Order1_A  </OrderNo>

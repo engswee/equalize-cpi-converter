@@ -93,7 +93,7 @@ class Base64EncodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Encode_Scenario1_output.txt'
 
 		expect:
-		new String(process()) == this.expectedOutputFile.text
+		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Base64 Encode - Plain output with compression'() {
@@ -108,11 +108,11 @@ class Base64EncodeConverterSpec extends Specification {
 		// Output of encoding can't be compared directly due to differences in output caused by compression
 		// So instead just reverse the process and see if it can decode back the encoded content
 		// to get back the original file
-		ConversionBase64Decode decoder = new ConversionBase64Decode(new String(encoded), true)
-		String decodedText = new String(decoder.decode())
+		ConversionBase64Decode decoder = new ConversionBase64Decode(new String(encoded, 'UTF-8'), true)
+		String decodedText = new String(decoder.decode(), 'UTF-8')
 
 		then:
-		decodedText == this.expectedOutputFile.text
+		decodedText == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Base64 Encode - XML output with default field name'() {
@@ -124,14 +124,14 @@ class Base64EncodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Encode_Scenario2_default_output.xml'
 
 		when:
-		String generatedOutput = new String(process())
+		String generatedOutput = new String(process(), 'UTF-8')
 		// XML is generated with system native line endings
 		// So on Windows, replace CRLF so that it matches sample output
 		if (newLine == '\r\n')
 			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
 
 		then:
-		generatedOutput == this.expectedOutputFile.text
+		generatedOutput == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Base64 Encode - XML output with configured field name'() {
@@ -144,13 +144,13 @@ class Base64EncodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Encode_Scenario2_output.xml'
 
 		when:
-		String generatedOutput = new String(process())
+		String generatedOutput = new String(process(), 'UTF-8')
 		// XML is generated with system native line endings
 		// So on Windows, replace CRLF so that it matches sample output
 		if (newLine == '\r\n')
 			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
 
 		then:
-		generatedOutput == this.expectedOutputFile.text
+		generatedOutput == this.expectedOutputFile.getText('UTF-8')
 	}
 }

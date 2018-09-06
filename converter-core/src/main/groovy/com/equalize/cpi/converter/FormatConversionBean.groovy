@@ -24,7 +24,7 @@ class FormatConversionBean {
 		AbstractConverter converter = cf.newConverter(this.body, this.properties, this.typeConverter)
 
 		// Retrieve configured parameters
-		converter.getParameters()
+		converter.retrieveParameters()
 
 		// Parse input
 		converter.parseInput()

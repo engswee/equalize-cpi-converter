@@ -24,9 +24,9 @@ abstract class RecordTypeParametersPlain2XML {
 		this.fixedLengths = fixedLengths
 	}
 
-	void setAdditionalParameters(String recordTypeName, String[] recordsetList, PropertyHelper param) throws ConverterException {
+	void storeAdditionalParameters(String recordTypeName, String[] recordsetList, PropertyHelper param) {
 		// Parent record type
-		this.parentRecordType = param.getProperty("${recordTypeName}.parent")
+		this.parentRecordType = param.retrieveProperty("${recordTypeName}.parent")
 		if (this.parentRecordType == recordTypeName) {
 			throw new ConverterException("Value in '${recordTypeName}.parent' cannot be the same as substructure name")
 		} else if (this.parentRecordType != 'Root') {
@@ -43,18 +43,18 @@ abstract class RecordTypeParametersPlain2XML {
 
 		// Field names
 		String fieldNamesColumn = recordTypeName + '.fieldNames'
-		String tempFieldNames = param.getProperty(fieldNamesColumn)
+		String tempFieldNames = param.retrieveProperty(fieldNamesColumn)
 		this.fieldNames = tempFieldNames.split(',')
 		// Validate the field names
 		validateFieldNames(recordTypeName, this.fieldNames)
 		// Structure deviations
-		this.missingLastFields = param.getProperty("${recordTypeName}.missingLastFields", 'ignore')
-		this.additionalLastFields = param.getProperty("${recordTypeName}.additionalLastFields", 'ignore')
+		this.missingLastFields = param.retrieveProperty("${recordTypeName}.missingLastFields", 'ignore')
+		this.additionalLastFields = param.retrieveProperty("${recordTypeName}.additionalLastFields", 'ignore')
 	}
 
 	abstract String parseKeyFieldValue(String lineInput)
 
-	abstract Field[] extractLineContents(String lineInput, boolean trim, int lineIndex) throws ConverterException
+	abstract Field[] extractLineContents(String lineInput, boolean trim, int lineIndex)
 
 	protected Field createNewField(String fieldName, String fieldValue, boolean trim) {
 		if (trim) {
@@ -63,12 +63,12 @@ abstract class RecordTypeParametersPlain2XML {
 		return new Field(fieldName, fieldValue)
 	}
 
-	protected void setKeyFieldParameters(String recordTypeName, PropertyHelper param, boolean csvMode) throws ConverterException {
-		String genericRecordType = param.getProperty('genericRecordType', '')
+	protected void storeKeyFieldParameters(String recordTypeName, PropertyHelper param, boolean csvMode) {
+		String genericRecordType = param.retrieveProperty('genericRecordType', '')
 		if (!genericRecordType || genericRecordType != recordTypeName) {
 			// Key field name and value
-			String keyFieldName = param.getProperty('keyFieldName')
-			this.keyFieldValue = param.getProperty("${recordTypeName}.keyFieldValue")
+			String keyFieldName = param.retrieveProperty('keyFieldName')
+			this.keyFieldValue = param.retrieveProperty("${recordTypeName}.keyFieldValue")
 
 			// Index and position of key field in record type
 			boolean found = false
@@ -91,7 +91,7 @@ abstract class RecordTypeParametersPlain2XML {
 		}
 	}
 
-	private void validateFieldNames(String recordTypeName, String[] fieldNames) throws ConverterException {
+	private void validateFieldNames(String recordTypeName, String[] fieldNames) {
 		// No duplicates in field names
 		Set<String> set = new HashSet<String>()
 		fieldNames.each { field ->

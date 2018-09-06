@@ -23,7 +23,7 @@ public class ConversionBase64Decode {
 		this.zippedContent = zippedContent;
 	}
 
-	public byte[] decode() throws IOException {
+	public byte[] decode() throws IOException, ConverterException {
 		byte[] decoded = DatatypeConverter.parseBase64Binary(this.base64String);
 
 		if (!this.zippedContent) {
@@ -35,7 +35,7 @@ public class ConversionBase64Decode {
 			ZipEntry ze = zis.getNextEntry();
 			// Check if there is a zip entry
 			if (ze == null) {
-				throw new RuntimeException("Unable to decompress as content is not zipped");
+				throw new ConverterException("Unable to decompress as content is not zipped");
 			}
 			byte[] content = getInputStreamBytes(zis);
 			zis.closeEntry();

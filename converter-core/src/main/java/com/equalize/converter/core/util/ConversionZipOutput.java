@@ -21,7 +21,7 @@ public class ConversionZipOutput {
 		this.zos.closeEntry();
 	}
 
-	public byte[] getBytes() throws IOException {
+	public byte[] retrieveBytes() throws IOException {
 		this.zos.close();
 		return this.baos.toByteArray();
 	}

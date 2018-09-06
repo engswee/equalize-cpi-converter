@@ -77,7 +77,7 @@ class Base64DecodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Decode_Scenario1_output.xml'
 
 		expect:
-		new String(process()) == this.expectedOutputFile.text
+		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8')
 	}
 
 	def 'Base64 Decode - Plain input containing binary uncompressed content'() {
@@ -90,6 +90,20 @@ class Base64DecodeConverterSpec extends Specification {
 		process() == this.expectedOutputFile.bytes
 	}
 
+	def 'Base64 Decode - exception is thrown when trying to decompress uncompressed input'() {
+		given:
+		this.properties << ['inputType':'plain']
+		this.properties << ['zippedContent':'Y']
+		this.inputFileName = 'Base64Decode_Scenario2.txt'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "Unable to decompress as content is not zipped"
+	}
+
 	def 'Base64 Decode - XML input containing compressed content'() {
 		given:
 		this.properties << ['inputType':'xml']
@@ -99,7 +113,22 @@ class Base64DecodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Decode_Scenario3_output.txt'
 
 		expect:
-		new String(process()) == this.expectedOutputFile.text
+		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'Base64 Decode - exception is thrown when XPath expression is invalid'() {
+		given:
+		this.properties << ['inputType':'xml']
+		this.properties << ['zippedContent':'Y']
+		this.properties << ['xpath':'/MT_TransferSAEFile/dummy']
+		this.inputFileName = 'Base64Decode_Scenario3.xml'
+
+		when:
+		process()
+
+		then:
+		ConverterException e = thrown()
+		e.message == "XPath /MT_TransferSAEFile/dummy does not exist"
 	}
 
 	def 'Base64 Decode - Plain input containing uncompressed content with Hebrew characters'() {
@@ -109,6 +138,6 @@ class Base64DecodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Decode_Scenario4_WithHebrew_output.txt'
 
 		expect:
-		new String(process(), 'UTF-8') == this.expectedOutputFile.text
+		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8')
 	}
 }

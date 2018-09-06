@@ -2,7 +2,7 @@ package com.equalize.converter.core.fcc
 
 import com.equalize.converter.core.util.ConverterException
 import com.equalize.converter.core.util.PropertyHelper
-import com.equalize.converter.core.util.Separator
+import com.sap.aii.af.sdk.xi.adapter.trans.Separator
 
 abstract class RecordTypeParametersXML2Plain {
 	public final String fieldSeparator
@@ -16,9 +16,9 @@ abstract class RecordTypeParametersXML2Plain {
 		this.fixedLengths = fixedLengths
 	}
 
-	void setAdditionalParameters(String recordTypeName, PropertyHelper param, String encoding) throws ConverterException {
+	void storeAdditionalParameters(String recordTypeName, PropertyHelper param, String encoding) {
 		// End Separator
-		String tempEndSeparator = param.getProperty("${recordTypeName}.endSeparator", '')
+		String tempEndSeparator = param.retrieveProperty("${recordTypeName}.endSeparator", '')
 		if (!tempEndSeparator) {
 			tempEndSeparator = Separator.newLine
 		} else {

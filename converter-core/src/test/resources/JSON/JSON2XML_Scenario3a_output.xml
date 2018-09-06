@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns:MT_JSON2XML xmlns:ns="urn:equalize:com">
+  <record>
+    <ChapterCode>01</ChapterCode>
+    <Description>Description 1</Description>
+    <StreamCode/>
+    <SubChapterCode/>
+  </record>
+</ns:MT_JSON2XML>
