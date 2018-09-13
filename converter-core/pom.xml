@@ -90,7 +90,18 @@
 						<exclude>**/com/sap/aii/af/sdk/xi/adapter/*.java</exclude>
 						<exclude>**/ConverterStandaloneTester.groovy</exclude>
 					</excludes>
+					<targetPercentage>90%</targetPercentage>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>instrument-test</goal>
+							<goal>check</goal>
+							<goal>clover</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
