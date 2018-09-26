@@ -33,6 +33,10 @@ public class ConversionExcelInput {
 		this.workbook = WorkbookFactory.create(is);
 		this.sheet = this.workbook.getSheetAt(sheetIndex);
 	}
+	
+	public String getCellStringValue(int row, int col) {
+		return this.sheet.getRow(row).getCell(col).getStringCellValue();
+	}
 
 	public void determineColumnDetails(String processFieldNames, String fieldNames, int columnCount, int headerRow,
 			boolean onlyValidCharsInXMLName) throws ConverterException {
