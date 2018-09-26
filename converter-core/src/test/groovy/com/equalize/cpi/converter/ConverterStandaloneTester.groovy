@@ -61,5 +61,12 @@ def outputContent = fcb.convert()
 // ----------------------------------------
 println "Generating output file at $outputFileName:-"
 def outputFile = new File(outputFileName)
-outputFile.write outputContent
-println outputContent
+switch (outputContent) {
+	case String:
+		outputFile.write outputContent
+		println outputContent
+		break
+	case byte[]:
+		outputFile.setBytes(outputContent)
+		break
+}
