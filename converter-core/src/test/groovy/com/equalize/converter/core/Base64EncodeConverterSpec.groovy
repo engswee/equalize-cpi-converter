@@ -29,7 +29,7 @@ class Base64EncodeConverterSpec extends Specification {
 		this.properties = ['converterClass':'com.equalize.converter.core.Base64EncodeConverter']
 	}
 
-	private process() {
+	private byte[] process() {
 		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
 		this.expectedOutputFile = new File("$filePath/$outputFileName")
 

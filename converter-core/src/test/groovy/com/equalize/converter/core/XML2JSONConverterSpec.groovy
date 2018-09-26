@@ -26,7 +26,7 @@ class XML2JSONConverterSpec extends Specification {
 		this.properties = ['converterClass':'com.equalize.converter.core.XML2JSONConverter']
 	}
 
-	private process() {
+	private String process() {
 		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
 		this.expectedOutputFile = new File("$filePath/$outputFileName")
 

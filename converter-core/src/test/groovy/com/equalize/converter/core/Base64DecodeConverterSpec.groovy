@@ -26,7 +26,7 @@ class Base64DecodeConverterSpec extends Specification {
 		this.properties = ['converterClass':'com.equalize.converter.core.Base64DecodeConverter']
 	}
 
-	private process() {
+	private byte[] process() {
 		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
 		this.expectedOutputFile = new File("$filePath/$outputFileName")
 
