@@ -4,6 +4,6 @@
     <Order>47890.0</Order>
     <Date>41673.0</Date>
     <Material>XYZ456</Material>
-    <Quantity>15.0</Quantity>
+    <Quantity>true</Quantity>
   </Line>
 </ns:MT_CustomOrder>

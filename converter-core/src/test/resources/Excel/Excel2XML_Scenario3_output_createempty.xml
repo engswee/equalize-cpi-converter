@@ -2,8 +2,17 @@
 <ns:MT_CustomOrder xmlns:ns="urn:equalize:com">
   <Record>
     <Column1>123456</Column1>
+    <Column2>space</Column2>
+    <Column3>space</Column3>
     <Column4>10</Column4>
     <Column5>6</Column5>
+  </Record>
+  <Record>
+    <Column1>space</Column1>
+    <Column2>space</Column2>
+    <Column3>space</Column3>
+    <Column4>space</Column4>
+    <Column5>space</Column5>
   </Record>
   <Record>
     <Column1>47890</Column1>

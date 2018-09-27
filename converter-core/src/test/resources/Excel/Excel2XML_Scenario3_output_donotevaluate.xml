@@ -3,13 +3,13 @@
   <Record>
     <Column1>123456</Column1>
     <Column4>10</Column4>
-    <Column5>6</Column5>
+    <Column5>LEN(A2)</Column5>
   </Record>
   <Record>
     <Column1>47890</Column1>
     <Column2>3-Feb</Column2>
     <Column3>XYZ'456</Column3>
     <Column4>15</Column4>
-    <Column5>5</Column5>
+    <Column5>LEN(A4)</Column5>
   </Record>
 </ns:MT_CustomOrder>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ns:MT_Order xmlns:ns="urn:equalize:com">
   <Record>
-    <Order>123456</Order>
-    <DateTime>7-Dec</DateTime>
+    <Order>123456.0</Order>
+    <DateTime>41980.0</DateTime>
     <M3aterial_Test>ABC123&amp;</M3aterial_Test>
-    <_Quantity>10</_Quantity>
-    <Boolean>TRUE</Boolean>
+    <_Quantity>10.0</_Quantity>
+    <Boolean>true</Boolean>
   </Record>
   <Record>
-    <Order>47890</Order>
-    <DateTime>3-Feb</DateTime>
+    <Order>47890.0</Order>
+    <DateTime>41673.0</DateTime>
     <M3aterial_Test>XYZ456</M3aterial_Test>
-    <_Quantity>15</_Quantity>
-    <Boolean>FALSE</Boolean>
+    <_Quantity>15.0</_Quantity>
+    <Boolean>false</Boolean>
   </Record>
 </ns:MT_Order>
