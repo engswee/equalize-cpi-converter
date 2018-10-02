@@ -1,6 +1,19 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+1.1.0 - Released 2 Oct 2018
+----------------------------------------------------------------------------------------------------
+Complete migration of Excel converters for CPI
+
+i) Migrated Excel <> XML converters. Includes new Excel related classes:-
+	- ConversionExcelInput
+	- ConversionExcelOutput
+
+ii) Added endSeparator parameter for DeepPlain2XML
+
+iii) Incorporated OpenClover for code coverage, along with updated Spock tests and misc refactoring
+
+----------------------------------------------------------------------------------------------------
 1.0.0 - Released 4 Sep 2018
 ----------------------------------------------------------------------------------------------------
 Initial release of FormatConversionBean for SAP Cloud Platform Integration (CPI)
