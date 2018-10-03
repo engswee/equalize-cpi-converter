@@ -7,7 +7,7 @@ import com.equalize.converter.core.util.PropertyHelper
 abstract class RecordTypeParametersPlain2XML {
 	public final String fieldSeparator
 	public final String[] fixedLengths
-	public String endSeparator
+	//public String endSeparator
 	// Plain to XML
 	protected String keyFieldValue
 	protected String[] fieldNames
