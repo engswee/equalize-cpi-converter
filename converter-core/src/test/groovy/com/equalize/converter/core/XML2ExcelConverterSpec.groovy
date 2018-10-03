@@ -61,14 +61,15 @@ class XML2ExcelConverterSpec extends Specification {
 		ConversionExcelInput generatedExcel = new ConversionExcelInput(is, 0)
 
 		then:
-		generatedExcel.getCellStringValue(0, 0) == '123456.00'
-		generatedExcel.getCellStringValue(0, 1) == '7-Dec'
-		generatedExcel.getCellStringValue(0, 2) == 'ABC123'
-		generatedExcel.getCellStringValue(0, 3) == '10'
-		generatedExcel.getCellStringValue(1, 0) == '47890'
-		generatedExcel.getCellStringValue(1, 1) == '3-Feb'
-		generatedExcel.getCellStringValue(1, 2) == 'XYZ456'
-		generatedExcel.getCellStringValue(1, 3) == '15'
+		generatedExcel.retrieveFormat() == 'xlsx'
+		generatedExcel.retrieveCellStringValue(0, 0) == '123456.00'
+		generatedExcel.retrieveCellStringValue(0, 1) == '7-Dec'
+		generatedExcel.retrieveCellStringValue(0, 2) == 'ABC123'
+		generatedExcel.retrieveCellStringValue(0, 3) == '10'
+		generatedExcel.retrieveCellStringValue(1, 0) == '47890'
+		generatedExcel.retrieveCellStringValue(1, 1) == '3-Feb'
+		generatedExcel.retrieveCellStringValue(1, 2) == 'XYZ456'
+		generatedExcel.retrieveCellStringValue(1, 3) == '15'
 	}
 
 	def 'XML -> Excel - XLSX output using DOM'() {
@@ -82,14 +83,15 @@ class XML2ExcelConverterSpec extends Specification {
 		ConversionExcelInput generatedExcel = new ConversionExcelInput(is, 0)
 
 		then:
-		generatedExcel.getCellStringValue(0, 0) == '123456.00'
-		generatedExcel.getCellStringValue(0, 1) == '7-Dec'
-		generatedExcel.getCellStringValue(0, 2) == 'ABC123'
-		generatedExcel.getCellStringValue(0, 3) == '10'
-		generatedExcel.getCellStringValue(1, 0) == '47890'
-		generatedExcel.getCellStringValue(1, 1) == '3-Feb'
-		generatedExcel.getCellStringValue(1, 2) == 'XYZ456'
-		generatedExcel.getCellStringValue(1, 3) == '15'
+		generatedExcel.retrieveFormat() == 'xlsx'
+		generatedExcel.retrieveCellStringValue(0, 0) == '123456.00'
+		generatedExcel.retrieveCellStringValue(0, 1) == '7-Dec'
+		generatedExcel.retrieveCellStringValue(0, 2) == 'ABC123'
+		generatedExcel.retrieveCellStringValue(0, 3) == '10'
+		generatedExcel.retrieveCellStringValue(1, 0) == '47890'
+		generatedExcel.retrieveCellStringValue(1, 1) == '3-Feb'
+		generatedExcel.retrieveCellStringValue(1, 2) == 'XYZ456'
+		generatedExcel.retrieveCellStringValue(1, 3) == '15'
 	}
 
 	def 'XML -> Excel - XLS output'() {
@@ -105,18 +107,19 @@ class XML2ExcelConverterSpec extends Specification {
 		ConversionExcelInput generatedExcel = new ConversionExcelInput(is, 'MySheet1')
 
 		then:
-		generatedExcel.getCellStringValue(0, 0) == 'Order'
-		generatedExcel.getCellStringValue(0, 1) == 'Date'
-		generatedExcel.getCellStringValue(0, 2) == 'Material'
-		generatedExcel.getCellStringValue(0, 3) == 'Quantity'
-		generatedExcel.getCellStringValue(1, 0) == '123456.00'
-		generatedExcel.getCellStringValue(1, 1) == '7-Dec'
-		generatedExcel.getCellStringValue(1, 2) == 'ABC123'
-		generatedExcel.getCellStringValue(1, 3) == '10'
-		generatedExcel.getCellStringValue(2, 0) == '47890'
-		generatedExcel.getCellStringValue(2, 1) == '3-Feb'
-		generatedExcel.getCellStringValue(2, 2) == 'XY&Z456'
-		generatedExcel.getCellStringValue(2, 3) == '15'
+		generatedExcel.retrieveFormat() == 'xls'
+		generatedExcel.retrieveCellStringValue(0, 0) == 'Order'
+		generatedExcel.retrieveCellStringValue(0, 1) == 'Date'
+		generatedExcel.retrieveCellStringValue(0, 2) == 'Material'
+		generatedExcel.retrieveCellStringValue(0, 3) == 'Quantity'
+		generatedExcel.retrieveCellStringValue(1, 0) == '123456.00'
+		generatedExcel.retrieveCellStringValue(1, 1) == '7-Dec'
+		generatedExcel.retrieveCellStringValue(1, 2) == 'ABC123'
+		generatedExcel.retrieveCellStringValue(1, 3) == '10'
+		generatedExcel.retrieveCellStringValue(2, 0) == '47890'
+		generatedExcel.retrieveCellStringValue(2, 1) == '3-Feb'
+		generatedExcel.retrieveCellStringValue(2, 2) == 'XY&Z456'
+		generatedExcel.retrieveCellStringValue(2, 3) == '15'
 	}
 
 	def 'XML -> Excel - XLSX output addHeaderLine fromConfiguration'() {
@@ -131,17 +134,18 @@ class XML2ExcelConverterSpec extends Specification {
 		ConversionExcelInput generatedExcel = new ConversionExcelInput(is, 0)
 
 		then:
-		generatedExcel.getCellStringValue(0, 0) == 'Field1'
-		generatedExcel.getCellStringValue(0, 1) == 'Date'
-		generatedExcel.getCellStringValue(0, 2) == 'Field2'
-		generatedExcel.getCellStringValue(0, 3) == 'Quantity'
-		generatedExcel.getCellStringValue(1, 0) == '123456.00'
-		generatedExcel.getCellStringValue(1, 1) == ''
-		generatedExcel.getCellStringValue(1, 2) == 'ABC123'
-		generatedExcel.getCellStringValue(1, 3) == '10'
-		generatedExcel.getCellStringValue(2, 0) == '47890'
-		generatedExcel.getCellStringValue(2, 1) == '3-Feb'
-		generatedExcel.getCellStringValue(2, 2) == ''
-		generatedExcel.getCellStringValue(2, 3) == ''
+		generatedExcel.retrieveFormat() == 'xlsx'
+		generatedExcel.retrieveCellStringValue(0, 0) == 'Field1'
+		generatedExcel.retrieveCellStringValue(0, 1) == 'Date'
+		generatedExcel.retrieveCellStringValue(0, 2) == 'Field2'
+		generatedExcel.retrieveCellStringValue(0, 3) == 'Quantity'
+		generatedExcel.retrieveCellStringValue(1, 0) == '123456.00'
+		generatedExcel.retrieveCellStringValue(1, 1) == ''
+		generatedExcel.retrieveCellStringValue(1, 2) == 'ABC123'
+		generatedExcel.retrieveCellStringValue(1, 3) == '10'
+		generatedExcel.retrieveCellStringValue(2, 0) == '47890'
+		generatedExcel.retrieveCellStringValue(2, 1) == '3-Feb'
+		generatedExcel.retrieveCellStringValue(2, 2) == ''
+		generatedExcel.retrieveCellStringValue(2, 3) == ''
 	}
 }

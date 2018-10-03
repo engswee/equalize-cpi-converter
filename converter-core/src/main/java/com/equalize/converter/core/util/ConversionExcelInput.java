@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -34,8 +35,16 @@ public class ConversionExcelInput {
 		this.sheet = this.workbook.getSheetAt(sheetIndex);
 	}
 	
-	public String getCellStringValue(int row, int col) {
+	public String retrieveCellStringValue(int row, int col) {
 		return this.sheet.getRow(row).getCell(col).getStringCellValue();
+	}
+	
+	public String retrieveFormat() {
+		if (this.workbook instanceof HSSFWorkbook) {
+			return "xls"; 
+		} else {
+			return "xlsx";
+		}
 	}
 
 	public void determineColumnDetails(String processFieldNames, String fieldNames, int columnCount, int headerRow,
