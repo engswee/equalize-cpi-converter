@@ -89,7 +89,7 @@ public class ConversionExcelInput {
 						if (cellContent != null) {
 							contentFoundOnRow = true;
 							rowContent.add(new Field(columnName, cellContent));
-						} else if (emptyCellDefaultValue != null) {
+						} else {
 							rowContent.add(new Field(columnName, emptyCellDefaultValue));
 						}
 					} else {
