@@ -71,6 +71,27 @@ class XML2ExcelConverterSpec extends Specification {
 		generatedExcel.getCellStringValue(1, 3) == '15'
 	}
 
+	def 'XML -> Excel - XLSX output using DOM'() {
+		given:
+		this.properties << ['useDOM':'Y']
+		this.inputFileName = 'XML2Excel_Scenario1.xml'
+		this.outputFileName = 'XML2Excel_Scenario1_output.xlsx'
+
+		when:
+		InputStream is = new ByteArrayInputStream(process())
+		ConversionExcelInput generatedExcel = new ConversionExcelInput(is, 0)
+
+		then:
+		generatedExcel.getCellStringValue(0, 0) == '123456.00'
+		generatedExcel.getCellStringValue(0, 1) == '7-Dec'
+		generatedExcel.getCellStringValue(0, 2) == 'ABC123'
+		generatedExcel.getCellStringValue(0, 3) == '10'
+		generatedExcel.getCellStringValue(1, 0) == '47890'
+		generatedExcel.getCellStringValue(1, 1) == '3-Feb'
+		generatedExcel.getCellStringValue(1, 2) == 'XYZ456'
+		generatedExcel.getCellStringValue(1, 3) == '15'
+	}
+
 	def 'XML -> Excel - XLS output'() {
 		given:
 		this.properties << ['excelFormat':'xls']

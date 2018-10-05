@@ -132,6 +132,18 @@ class XML2DeepPlainConverterSpec extends Specification {
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
+	def 'XML > Plain - CSV output with default field separator using DOM'() {
+		given:
+		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']
+		this.properties << ['defaultFieldSeparator':',']
+		this.properties << ['useDOM':'Y']
+		this.inputFileName = 'XML2DeepPlain_Scenario3.xml'
+		this.outputFileName = 'XML2DeepPlain_Scenario3_output.txt'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
 	def 'XML > Plain - CSV output with certain segments without fields'() {
 		given:
 		this.properties << ['recordsetStructure':'Header,Delivery,Order,OrderText,Item,Footer']

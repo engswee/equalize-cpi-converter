@@ -6,16 +6,16 @@ import com.equalize.converter.core.util.AbstractConverter
 import com.equalize.converter.core.util.ClassTypeConverter
 import com.equalize.converter.core.util.ConversionDOMInput
 import com.equalize.converter.core.util.ConversionPlainOutput
+import com.equalize.converter.core.util.ConversionSAXInput
 import com.equalize.converter.core.util.ConverterException
 import com.equalize.converter.core.util.Field
 import com.equalize.converter.core.util.XMLElementContainer
 
 class XML2DeepPlainConverter extends AbstractConverter {
-	ConversionDOMInput domIn
 	ConversionPlainOutput plainOut
 	XMLElementContainer rootXML
 	String encoding
-	String recordsetStructure
+	boolean useDOM
 	final Map<String, RecordTypeParametersXML2Plain> recordTypes
 
 	XML2DeepPlainConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
@@ -26,9 +26,10 @@ class XML2DeepPlainConverter extends AbstractConverter {
 	@Override
 	void retrieveParameters(){
 		this.encoding = this.ph.retrieveProperty('encoding', 'UTF-8')
-		this.recordsetStructure = this.ph.retrieveProperty('recordsetStructure')
+		this.useDOM = this.ph.retrievePropertyAsBoolean('useDOM', 'N')
+		String recordsetStructure = this.ph.retrieveProperty('recordsetStructure')
 
-		String[] recordsetList = this.recordsetStructure.split(',')
+		String[] recordsetList = recordsetStructure.split(',')
 		recordsetList.each { recordTypeName ->
 			if (!this.recordTypes.containsKey(recordTypeName)) {
 				RecordTypeParametersXML2Plain rtp = (RecordTypeParametersXML2Plain) RecordTypeParametersFactory
@@ -44,10 +45,16 @@ class XML2DeepPlainConverter extends AbstractConverter {
 
 	@Override
 	void parseInput() {
-		// Parse input XML contents
-		def is =  this.typeConverter.convertTo(InputStream, this.body)
-		this.domIn = new ConversionDOMInput(is)
-		this.rootXML = this.domIn.extractDOMContent()
+		// Parse input XML contents		
+		if (this.useDOM) {
+			def is =  this.typeConverter.convertTo(InputStream, this.body)
+			ConversionDOMInput domIn = new ConversionDOMInput(is)
+			this.rootXML = domIn.extractDOMContent()
+		} else {
+			def reader =  this.typeConverter.convertTo(Reader, this.body)
+			ConversionSAXInput saxIn = new ConversionSAXInput(reader)
+			this.rootXML = saxIn.extractXMLContent()
+		}
 	}
 
 	@Override

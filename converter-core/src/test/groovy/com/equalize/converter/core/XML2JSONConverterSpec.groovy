@@ -56,6 +56,16 @@ class XML2JSONConverterSpec extends Specification {
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
+	def 'XML -> JSON - default no indent and skip using DOM'() {
+		given:
+		this.properties << ['useDOM':'Y']
+		this.inputFileName = 'XML2JSON_Scenario2.xml'
+		this.outputFileName = 'XML2JSON_Scenario2_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
 	def 'XML -> JSON - selected list of array fields'() {
 		given:
 		this.properties << ['indentFactor':'2']

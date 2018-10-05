@@ -4,6 +4,7 @@ import com.equalize.converter.core.util.AbstractConverter
 import com.equalize.converter.core.util.ClassTypeConverter
 import com.equalize.converter.core.util.ConversionDOMInput
 import com.equalize.converter.core.util.ConversionExcelOutput
+import com.equalize.converter.core.util.ConversionSAXInput
 import com.equalize.converter.core.util.Field
 import com.equalize.converter.core.util.XMLElementContainer
 
@@ -14,6 +15,7 @@ class XML2ExcelConverter extends AbstractConverter {
 	String excelFormat
 	String addHeaderLine
 	String fieldNames
+	boolean useDOM
 
 	String[] columnNames
 	XMLElementContainer rootXML
@@ -37,14 +39,20 @@ class XML2ExcelConverter extends AbstractConverter {
 			this.fieldNames = this.ph.retrieveProperty('fieldNames')
 			this.columnNames = this.fieldNames.split(',')
 		}
-
+		this.useDOM = this.ph.retrievePropertyAsBoolean('useDOM', 'N')
 	}
 
 	@Override
 	void parseInput() {
-		def is =  this.typeConverter.convertTo(InputStream, this.body)
-		ConversionDOMInput domIn = new ConversionDOMInput(is)
-		this.rootXML = domIn.extractDOMContent()
+		if (this.useDOM) {
+			def is =  this.typeConverter.convertTo(InputStream, this.body)
+			ConversionDOMInput domIn = new ConversionDOMInput(is)
+			this.rootXML = domIn.extractDOMContent()
+		} else {
+			def reader =  this.typeConverter.convertTo(Reader, this.body)
+			ConversionSAXInput saxIn = new ConversionSAXInput(reader)
+			this.rootXML = saxIn.extractXMLContent()
+		}
 	}
 
 	@Override
