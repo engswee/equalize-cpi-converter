@@ -90,7 +90,31 @@
 						<exclude>**/com/sap/aii/af/sdk/xi/adapter/*.java</exclude>
 						<exclude>**/ConverterStandaloneTester.groovy</exclude>
 					</excludes>
+					<targetPercentage>90%</targetPercentage>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<configuration>
+					<target>
+						<delete includeemptydirs="true">
+							<fileset dir="target">
+								<include name="**/instrumentation.ser" />
+								<include name="**/groverconfig*" />
+							</fileset>
+						</delete>
+					</target>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
