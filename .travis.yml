@@ -1,7 +1,10 @@
 language: java
 jdk:
   - openjdk7
-script: mvn -f converter-core/pom.xml clean initialize clover:instrument-test clover:check clover:clover
+
+install: true
+
+script: mvn clean initialize clover:instrument-test clover:check clover:clover
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

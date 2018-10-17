@@ -9,7 +9,7 @@
 	<version>1.1.1</version>
 
 	<name>converter-core</name>
-	<url>http://www.equalize.com</url>
+	<url>https://github.com/engswee/equalize-cpi-converter</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
