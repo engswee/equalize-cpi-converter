@@ -1,6 +1,20 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+1.2.0 - Released 2 Nov 2018
+----------------------------------------------------------------------------------------------------
+i) Switch default XML parsing from DOM to SAX-based XmlSlurper
+	- XML2DeepPlainConverter
+	- XML2ExcelConverter
+	- XML2JSONConverter
+
+ii) Restructure project folder to root of Git repository
+
+iii) Added Travis CI for Continuous Integration
+
+iv) Misc minor fixes
+
+----------------------------------------------------------------------------------------------------
 1.1.0 - Released 2 Oct 2018
 ----------------------------------------------------------------------------------------------------
 Complete migration of Excel converters for CPI
