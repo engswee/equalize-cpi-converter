@@ -1,6 +1,15 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+2.0.0 - Released 13 May 2019
+----------------------------------------------------------------------------------------------------
+i) Update to JDK 8 to synchronise with JRE/JVM version update on CPI tenant
+
+ii) Update Apache POI library (used for Excel conversion) to 4.1.0 (which requires Java 8)
+
+iii) Update miscellaneous other libraries - JUnit, Maven, OpenClover, GMavenPlus
+
+----------------------------------------------------------------------------------------------------
 1.4.0 - Released 1 May 2019
 ----------------------------------------------------------------------------------------------------
 i) Add new parameter 'fieldConversions' to XML2JSONConverter

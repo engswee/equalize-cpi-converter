@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - openjdk7
+  - openjdk8 #Ubuntu Trusty Build Environment on Google Compute Engine (GCE)
 
 install: true
 
