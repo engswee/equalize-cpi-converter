@@ -47,7 +47,7 @@ public class ConversionBase64Decode {
 	private byte[] getInputStreamBytes(InputStream inStream) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buffer = new byte[DEF_BUFFER_SIZE];
-		int read = 0;
+		int read;
 		while ((read = inStream.read(buffer, 0, buffer.length)) != -1) {
 			baos.write(buffer, 0, read);
 		}

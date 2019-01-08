@@ -32,8 +32,7 @@ public class ConversionDOMInput {
 
 	public XMLElementContainer extractDOMContent() {
 		Node root = this.doc.getDocumentElement();
-		XMLElementContainer rootElement = (XMLElementContainer) parseNode(root);
-		return rootElement;
+		return (XMLElementContainer) parseNode(root);
 	}
 
 	public Node evaluateXPathToNode(String xpath) throws XPathExpressionException {

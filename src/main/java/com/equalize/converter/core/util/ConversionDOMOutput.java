@@ -89,8 +89,7 @@ public class ConversionDOMOutput {
 
 	private void constructDOMContent(Node parentNode, List<Field> fieldList) throws ConverterException {
 		// Go through each entry of the List
-		for (int i = 0; i < fieldList.size(); i++) {
-			Field field = fieldList.get(i);
+		for (Field field : fieldList) {
 			constructDOMContent(parentNode, field.fieldName, field.fieldContent);
 		}
 	}
@@ -118,7 +117,7 @@ public class ConversionDOMOutput {
 
 	private Node addElementToNode(Node parentNode, String elementName) throws ConverterException {
 		try {
-			Node element = null;
+			Node element;
 			if (this.escapeInvalidNameStartChar || this.mangleInvalidNameChar) {
 				element = this.doc.createElement(generateElementName(elementName));
 			} else {
@@ -149,14 +148,14 @@ public class ConversionDOMOutput {
 					sb.append("__").append(c);
 				} else if (!XMLChar.isNameStart(c)) {
 					String hex = String.format("%04x", (int) c);
-					sb.append("__u" + hex);
+					sb.append("__u").append(hex);
 				} else {
 					sb.append(c);
 				}
 			} else if (this.mangleInvalidNameChar) {
 				if (!XMLChar.isName(c)) {
 					String hex = String.format("%04x", (int) c);
-					sb.append("__u" + hex);
+					sb.append("__u").append(hex);
 				} else {
 					sb.append(c);
 				}

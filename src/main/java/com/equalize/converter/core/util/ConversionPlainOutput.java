@@ -14,8 +14,7 @@ public class ConversionPlainOutput {
 		}
 	}
 
-	private String generateDelimitedLine(List<Field> childFields, String fieldSeparator, String endSeparator)
-			throws IOException {
+	private String generateDelimitedLine(List<Field> childFields, String fieldSeparator, String endSeparator) {
 		StringBuilder sb = new StringBuilder();
 		int leafFieldCount = 0;
 		// Process all child elements that are fields

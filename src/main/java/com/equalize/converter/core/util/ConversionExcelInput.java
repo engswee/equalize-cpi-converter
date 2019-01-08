@@ -72,14 +72,14 @@ public class ConversionExcelInput {
 		if (startRow >= noOfRows)
 			throw new ConverterException("Starting row is greater than last row of sheet");
 
-		List<Field> contents = new ArrayList<Field>();
+		List<Field> contents = new ArrayList<>();
 		int lastColumn = startCol + this.noOfColumns;
 		// Go through each row
 		for (int rowNo = startRow; rowNo < noOfRows; rowNo++) {
 			Row row = this.sheet.getRow(rowNo);
 			boolean contentFoundOnRow = false;
 			if (row != null) {
-				List<Field> rowContent = new ArrayList<Field>(this.noOfColumns);
+				List<Field> rowContent = new ArrayList<>(this.noOfColumns);
 				// Go through each column cell of the current row
 				for (int colNo = startCol; colNo < lastColumn; colNo++) {
 					Cell cell = row.getCell(colNo);
@@ -101,7 +101,7 @@ public class ConversionExcelInput {
 			}
 			// Add empty rows if skip parameter set to NO
 			if (!skipEmptyRows && !contentFoundOnRow && emptyCellDefaultValue != null) {
-				List<Field> emptyRow = new ArrayList<Field>(this.noOfColumns);
+				List<Field> emptyRow = new ArrayList<>(this.noOfColumns);
 				for (int i = 0; i < this.noOfColumns; i++) {
 					emptyRow.add(new Field(retrieveColumnName(i), emptyCellDefaultValue));
 				}
@@ -181,6 +181,6 @@ public class ConversionExcelInput {
 		if (this.columnNames != null)
 			return this.columnNames[index];
 		else
-			return "Column" + Integer.toString(index + 1);
+			return "Column" + (index + 1);
 	}
 }

@@ -30,7 +30,7 @@ class PropertyHelperSpec extends Specification {
 
 	def 'String - exception is triggered if mandatory parameter is not populated'() {
 		when: 'try to retrieve a missing mandatory property'
-		String content = this.ph.retrieveProperty('mandatoryParam')
+		this.ph.retrieveProperty('mandatoryParam')
 
 		then: 'Exception is thrown'
 		ConverterException e = thrown()
@@ -59,7 +59,7 @@ class PropertyHelperSpec extends Specification {
 
 	def 'Integer - exception is triggered if mandatory parameter is not populated'() {
 		when: 'try to retrieve a missing mandatory property'
-		int content = this.ph.retrievePropertyAsInt('mandatoryIntParam')
+		this.ph.retrievePropertyAsInt('mandatoryIntParam')
 
 		then: 'Exception is thrown'
 		ConverterException e = thrown()
@@ -82,13 +82,13 @@ class PropertyHelperSpec extends Specification {
 		boolean contentNo = this.ph.retrievePropertyAsBoolean('booleanParamNo')
 
 		then: 'value of property is returned'
-		content == true
-		contentNo == false
+        content
+        !contentNo
 	}
 
 	def 'Boolean - exception is triggered if mandatory parameter is not populated'() {
 		when: 'try to retrieve a missing mandatory property'
-		boolean content = this.ph.retrievePropertyAsBoolean('mandatoryBoolParam')
+		this.ph.retrievePropertyAsBoolean('mandatoryBoolParam')
 
 		then: 'Exception is thrown'
 		ConverterException e = thrown()
@@ -101,8 +101,8 @@ class PropertyHelperSpec extends Specification {
 		boolean contentNo = this.ph.retrievePropertyAsBoolean('optBoolParamNo','N')
 
 		then: 'default value of property is returned'
-		content == true
-		contentNo == false
+        content
+        !contentNo
 	}
 
 	def 'checkValidValues - exception is not thrown if configured parameter is a valid value'() {
@@ -110,7 +110,7 @@ class PropertyHelperSpec extends Specification {
 		this.ph.checkValidValues('outputType', 'plain', ['plain', 'xml'] as Set)
 
 		then: 'Exception is not thrown'
-		ConverterException e = notThrown()
+		notThrown()
 	}
 
 	def 'checkValidValues - exception is thrown if configured parameter is not a valid value'() {

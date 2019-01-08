@@ -12,8 +12,8 @@ public class XMLElementContainer {
 	private final List<Field> childFields;
 
 	public XMLElementContainer(String elementName) {
-		this.childFieldList = new LinkedHashMap<String, Integer>();
-		this.childFields = new ArrayList<Field>();
+		this.childFieldList = new LinkedHashMap<>();
+		this.childFields = new ArrayList<>();
 		this.elementName = elementName;
 	}
 

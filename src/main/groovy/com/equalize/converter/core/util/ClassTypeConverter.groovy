@@ -1,5 +1,5 @@
-package com.equalize.converter.core.util;
+package com.equalize.converter.core.util
 
-public interface ClassTypeConverter {
-	public <T> Object convertTo(Object classTo, Object objectFrom);
+interface ClassTypeConverter {
+	def <T> Object convertTo(Object classTo, Object objectFrom);
 }

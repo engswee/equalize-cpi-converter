@@ -11,7 +11,7 @@ abstract class RecordTypeParametersXML2Plain {
 	// XML to Plain
 	public String fixedLengthTooShortHandling
 
-	public RecordTypeParametersXML2Plain(String fieldSeparator, String[] fixedLengths) {
+	RecordTypeParametersXML2Plain(String fieldSeparator, String[] fixedLengths) {
 		this.fieldSeparator = fieldSeparator
 		this.fixedLengths = fixedLengths
 	}

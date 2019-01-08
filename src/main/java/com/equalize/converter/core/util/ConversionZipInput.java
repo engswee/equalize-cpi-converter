@@ -17,13 +17,13 @@ public class ConversionZipInput {
 		this.zis = new ZipInputStream(inStream);
 	}
 
-	public ConversionZipInput(byte[] content) throws IOException {
+	public ConversionZipInput(byte[] content) {
 		this.zis = new ZipInputStream(new ByteArrayInputStream(content));
 	}
 
 	public Map<String, byte[]> retrieveEntriesContent() throws IOException {
-		ZipEntry ze = null;
-		Map<String, byte[]> map = new LinkedHashMap<String, byte[]>();
+		ZipEntry ze;
+		Map<String, byte[]> map = new LinkedHashMap<>();
 
 		// Loop through all entries in the zip file
 		while ((ze = this.zis.getNextEntry()) != null) {
@@ -38,7 +38,7 @@ public class ConversionZipInput {
 	private byte[] getInputStreamBytes(InputStream inStream) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buffer = new byte[DEF_BUFFER_SIZE];
-		int read = 0;
+		int read;
 		while ((read = inStream.read(buffer, 0, buffer.length)) != -1) {
 			baos.write(buffer, 0, read);
 		}

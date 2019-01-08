@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class ConversionPlainInput {
 	private final List<String> lineContents;
 
-	public ConversionPlainInput(InputStream inStream, String endSeparator) throws IOException {
-		List<String> contents = new ArrayList<String>();
+	public ConversionPlainInput(InputStream inStream, String endSeparator) {
+		List<String> contents = new ArrayList<>();
 		Scanner scanner = new Scanner(inStream, "UTF-8");
 		scanner.useDelimiter(endSeparator);
 		while (scanner.hasNext()) {
@@ -25,7 +25,7 @@ public class ConversionPlainInput {
 	}
 
 	public ConversionPlainInput(InputStream inStream) throws IOException {
-		List<String> contents = new ArrayList<String>();
+		List<String> contents = new ArrayList<>();
 		LineNumberReader lnr = new LineNumberReader(new InputStreamReader(inStream));
 		String lineContent;
 		while ((lineContent = lnr.readLine()) != null) {

@@ -22,8 +22,8 @@ String propertyList = args[2]
 // Closures
 // ----------------------------------------
 def decodeQueryString = { String queryString ->
-	URI uri = new URI("http://localhost?" + queryString);
-	return uri.getQuery();
+	URI uri = new URI("http://localhost?" + queryString)
+	return uri.getQuery()
 }
 def parseQueryString = { String queryString ->
 	Map<String, String> queryPairs = new LinkedHashMap<String, String>()

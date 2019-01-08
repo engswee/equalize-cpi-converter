@@ -17,9 +17,9 @@ class ConverterFactory {
 		try {
 			// Dynamic loading and instantiation of converter class
 			Class<?> converterClass = Class.forName(converterClassName)
-			Constructor<?> constructor = converterClass.getConstructor(Object, Map, ClassTypeConverter);
+			Constructor<?> constructor = converterClass.getConstructor(Object, Map, ClassTypeConverter)
 			return (AbstractConverter) constructor.newInstance(body, properties, typeConverter)
-		} catch(ClassNotFoundException e) {
+		} catch(ClassNotFoundException ignored) {
 			throw new ClassNotFoundException("$converterClassName is an invalid converter class")
 		}
 	}

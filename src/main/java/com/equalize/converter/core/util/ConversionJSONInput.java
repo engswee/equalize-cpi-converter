@@ -31,7 +31,7 @@ public class ConversionJSONInput {
 	}
 
 	private List<Field> parseJSON(JSONObject jo) {
-		List<Field> arr = new ArrayList<Field>();
+		List<Field> arr = new ArrayList<>();
 		Iterator<String> keyIter = jo.keys();
 		while (keyIter.hasNext()) {
 			String keyName = keyIter.next();

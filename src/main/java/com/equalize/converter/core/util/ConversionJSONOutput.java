@@ -37,7 +37,7 @@ public class ConversionJSONOutput {
 	}
 
 	private void constructJSONContentfromXML(JSONObject parent, XMLElementContainer element) {
-		Map<String, JSONArray> map = new LinkedHashMap<String, JSONArray>();
+		Map<String, JSONArray> map = new LinkedHashMap<>();
 		// Process all the child fields of the XML element
 		for (Field childField : element.getChildFields()) {
 			// Check if it is an array first
