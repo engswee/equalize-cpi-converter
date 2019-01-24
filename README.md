@@ -7,6 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/engswee/equalize-cpi-converter/blob/master/LICENSE)
 [![](https://tokei.rs/b1/github/engswee/equalize-cpi-converter?category=files)](https://github.com/engswee/equalize-cpi-converter)
 [![](https://tokei.rs/b1/github/engswee/equalize-cpi-converter?category=code)](https://github.com/engswee/equalize-cpi-converter)
+[![HitCount](http://hits.dwyl.io/engswee/equalize-cpi-converter.svg)](http://hits.dwyl.io/engswee/equalize-cpi-converter)
 
 FormatConversionBean is a collection of converters for transforming data content from one format to another, e.g. JSON to XML, XML to Excel, etc. It was originally developed as a [complementary open-source solution for SAP Process Integration (PI)](https://blogs.sap.com/2015/03/25/formatconversionbean-one-bean-to-rule-them-all/) and is now [also available for SAP Cloud Platform Integration (CPI)](https://blogs.sap.com/2018/09/04/formatconversionbean-arrives-in-cpi/).
 
