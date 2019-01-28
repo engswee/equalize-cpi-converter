@@ -111,4 +111,16 @@ class XML2JSONConverterSpec extends Specification {
 		expect:
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
+
+	def 'XML -> JSON - apply custom field conversions for output in boolean, number and null format'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.properties << ['fieldConversions':'title:number,SortAs:null,GlossSeeAlso:boolean']
+		this.inputFileName = 'XML2JSON_Scenario4.xml'
+		this.outputFileName = 'XML2JSON_Scenario4_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
 }

@@ -13,6 +13,7 @@ class XML2JSONConverter extends AbstractConverter {
 	boolean forceArrayAll
 	boolean useDOM
 	Set<String> arrayFields = []
+	Map<String, String> fieldConversions = [:]
 	XMLElementContainer rootXML
 
 	XML2JSONConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
@@ -28,6 +29,13 @@ class XML2JSONConverter extends AbstractConverter {
 		if(arrayFieldList && arrayFieldList.trim())
 			this.arrayFields = arrayFieldList.split(',') as Set
 		this.useDOM = this.ph.retrievePropertyAsBoolean('useDOM', 'N')
+		String fieldConversionsRaw = this.ph.retrieveProperty('fieldConversions', '')
+		if (fieldConversionsRaw) {
+			fieldConversionsRaw.split(',').each {
+				String[] pairs = it.split(':')
+				this.fieldConversions.put(pairs[0], pairs[1])
+			}
+		}
 	}
 
 	@Override
@@ -48,6 +56,7 @@ class XML2JSONConverter extends AbstractConverter {
 		ConversionJSONOutput jsonOut = new ConversionJSONOutput()
 		jsonOut.setArrayFields(this.arrayFields)
 		jsonOut.setForceArray(this.forceArrayAll)
+		jsonOut.setFieldConversions(this.fieldConversions)
 		jsonOut.generateJSONText(this.rootXML, this.skipRootNode, this.indentFactor)
 	}
 }
