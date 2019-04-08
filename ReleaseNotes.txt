@@ -1,6 +1,22 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+1.3.0 - Released 8 Apr 2019
+----------------------------------------------------------------------------------------------------
+i) Update Groovy libraries based on CPI's latest version update (~ Mar 2019)
+	- groovy-all => 2.4.12
+	- spock-core => 1.3-groovy-2.4
+
+ii) Misc Java and Groovy code cleanup based on IntelliJ IDEA code inspection results
+
+iii) Convert CamelClassTypeConverter to Groovy class as previously it wasn't working
+     due to Reflection API issue on older Groovy version
+
+iv) Add IntelliJ IDEA files to .gitignore
+
+v) Add Codecov YAML file to disable coverage check on patch
+
+----------------------------------------------------------------------------------------------------
 1.2.0 - Released 2 Nov 2018
 ----------------------------------------------------------------------------------------------------
 i) Switch default XML parsing from DOM to SAX-based XmlSlurper
