@@ -91,7 +91,7 @@ class XML2DeepPlainConverter extends AbstractConverter {
 		}
 
 		return this.plainOut.generateLineText(childFields, rtp.fieldSeparator, rtp.fixedLengths, rtp.endSeparator,
-				rtp.fixedLengthTooShortHandling)
+				rtp.fixedLengthTooShortHandling, rtp.enclosureSign, rtp.enclosureSignEscape)
 	}
 
 	private void checkFieldCountConsistency(String segmentName, List<Field> childFields, int noOfColumns) {

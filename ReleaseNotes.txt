@@ -1,6 +1,12 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+2.1.0 - Released 29 May 2019
+----------------------------------------------------------------------------------------------------
+i) Add parameters 'defaultEnclosureSign' & 'defaultEnclosureSignEscape' to XML2DeepPlainConverter
+    - this enables generating delimited flat files with an enclosure sign
+
+----------------------------------------------------------------------------------------------------
 2.0.0 - Released 13 May 2019
 ----------------------------------------------------------------------------------------------------
 i) Update to JDK 8 to synchronise with JRE/JVM version update on CPI tenant

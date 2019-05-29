@@ -1,6 +1,6 @@
 package com.equalize.converter.core.fcc
 
-import com.equalize.converter.core.util.ConverterException
+
 import com.equalize.converter.core.util.PropertyHelper
 import com.sap.aii.af.sdk.xi.adapter.trans.Separator
 
@@ -10,6 +10,8 @@ abstract class RecordTypeParametersXML2Plain {
 	public String endSeparator
 	// XML to Plain
 	public String fixedLengthTooShortHandling
+	public String enclosureSign
+	public String enclosureSignEscape
 
 	RecordTypeParametersXML2Plain(String fieldSeparator, String[] fixedLengths) {
 		this.fieldSeparator = fieldSeparator
