@@ -10,7 +10,7 @@ class ConversionSAXInput {
 		this.root = new XmlSlurper().parse(reader)
 	}
 
-	XMLElementContainer extractXMLContent() {
+	XMLElementContainer extractXMLContent(boolean trim) {
 		// Define recursive trampoline closure for parsing child nodes
 		def parseNode
 		parseNode = { Node node, XMLElementContainer parentElement ->
@@ -32,7 +32,7 @@ class ConversionSAXInput {
 							parseNode.trampoline(it, element).call()
 							break
 						case String:
-							parentElement.addChildField(node.name(), it.trim())
+							parentElement.addChildField(node.name(), trim ? it.trim() : it)
 							break
 					}
 				}

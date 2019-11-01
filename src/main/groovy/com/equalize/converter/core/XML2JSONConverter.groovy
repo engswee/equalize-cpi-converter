@@ -12,6 +12,7 @@ class XML2JSONConverter extends AbstractConverter {
 	boolean skipRootNode
 	boolean forceArrayAll
 	boolean useDOM
+	boolean trim
 	Set<String> arrayFields = []
 	Map<String, String> fieldConversions = [:]
 	XMLElementContainer rootXML
@@ -25,6 +26,7 @@ class XML2JSONConverter extends AbstractConverter {
 		this.indentFactor = this.ph.retrievePropertyAsInt('indentFactor', '0')
 		this.skipRootNode = this.ph.retrievePropertyAsBoolean('skipRootNode', 'N')
 		this.forceArrayAll = this.ph.retrievePropertyAsBoolean('forceArrayAll', 'N')
+		this.trim = this.ph.retrievePropertyAsBoolean('trim', 'N')
 		String arrayFieldList = this.ph.retrieveProperty('arrayFieldList', '')
 		if(arrayFieldList && arrayFieldList.trim())
 			this.arrayFields = arrayFieldList.split(',') as Set
@@ -43,11 +45,11 @@ class XML2JSONConverter extends AbstractConverter {
 		if (this.useDOM) {
 			def is =  this.typeConverter.convertTo(InputStream, this.body)
 			ConversionDOMInput domIn = new ConversionDOMInput(is)
-			this.rootXML = domIn.extractDOMContent()
+			this.rootXML = domIn.extractDOMContent(this.trim)
 		} else {
 			def reader =  this.typeConverter.convertTo(Reader, this.body)
 			ConversionSAXInput saxIn = new ConversionSAXInput(reader)
-			this.rootXML = saxIn.extractXMLContent()
+			this.rootXML = saxIn.extractXMLContent(this.trim)
 		}
 	}
 

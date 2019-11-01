@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:MT_Deep xmlns:ns0="urn:equalize/DeepFCC">
+ <Delivery>
+  <Type>D</Type>
+  <DeliveryNo>Delivery2</DeliveryNo>
+  <Order>
+   <Type>O</Type>
+   <DeliveryNo>Delivery2</DeliveryNo>
+   <OrderNo>    5</OrderNo>
+  </Order>
+ </Delivery>
+</ns0:MT_Deep>

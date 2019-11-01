@@ -1,6 +1,14 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+2.1.1 - Released 5 Nov 2019
+----------------------------------------------------------------------------------------------------
+i) Fix issue #4 - XML text nodes no longer automatically trimmed as they are considered
+   significant whitespace
+ii) Add parameters 'trim' (defaulted to N) to all XML2xxx converters
+    - this enables trimming of XML text nodes when set to Y
+
+----------------------------------------------------------------------------------------------------
 2.1.0 - Released 29 May 2019
 ----------------------------------------------------------------------------------------------------
 i) Add parameters 'defaultEnclosureSign' & 'defaultEnclosureSignEscape' to XML2DeepPlainConverter

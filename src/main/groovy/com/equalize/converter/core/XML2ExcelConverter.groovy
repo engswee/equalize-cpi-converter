@@ -16,6 +16,7 @@ class XML2ExcelConverter extends AbstractConverter {
 	String addHeaderLine
 	String fieldNames
 	boolean useDOM
+	boolean trim
 
 	String[] columnNames
 	XMLElementContainer rootXML
@@ -40,6 +41,7 @@ class XML2ExcelConverter extends AbstractConverter {
 			this.columnNames = this.fieldNames.split(',')
 		}
 		this.useDOM = this.ph.retrievePropertyAsBoolean('useDOM', 'N')
+		this.trim = this.ph.retrievePropertyAsBoolean('trim', 'N')
 	}
 
 	@Override
@@ -47,11 +49,11 @@ class XML2ExcelConverter extends AbstractConverter {
 		if (this.useDOM) {
 			def is =  this.typeConverter.convertTo(InputStream, this.body)
 			ConversionDOMInput domIn = new ConversionDOMInput(is)
-			this.rootXML = domIn.extractDOMContent()
+			this.rootXML = domIn.extractDOMContent(this.trim)
 		} else {
 			def reader =  this.typeConverter.convertTo(Reader, this.body)
 			ConversionSAXInput saxIn = new ConversionSAXInput(reader)
-			this.rootXML = saxIn.extractXMLContent()
+			this.rootXML = saxIn.extractXMLContent(this.trim)
 		}
 	}
 

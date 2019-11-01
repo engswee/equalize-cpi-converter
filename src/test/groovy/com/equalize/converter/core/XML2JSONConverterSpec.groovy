@@ -94,6 +94,7 @@ class XML2JSONConverterSpec extends Specification {
 		given:
 		this.properties << ['indentFactor':'2']
 		this.properties << ['skipRootNode':'Y']
+		this.properties << ['trim':'Y']
 		this.inputFileName = 'XML2JSON_Scenario1b.xml'
 		this.outputFileName = 'XML2JSON_Scenario1b_output.json'
 

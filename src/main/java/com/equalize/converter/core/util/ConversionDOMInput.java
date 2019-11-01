@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 public class ConversionDOMInput {
 	private final Document doc;
 	private XPathFactory xpathFac;
+	private boolean trim;
 
 	public ConversionDOMInput(InputStream inStream) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -30,7 +31,8 @@ public class ConversionDOMInput {
 		return this.doc;
 	}
 
-	public XMLElementContainer extractDOMContent() {
+	public XMLElementContainer extractDOMContent(boolean trim) {
+		this.trim = trim;
 		Node root = this.doc.getDocumentElement();
 		return (XMLElementContainer) parseNode(root);
 	}
@@ -75,7 +77,7 @@ public class ConversionDOMInput {
 		// leaf node
 		// If it has child text node, then it should extract that text node
 		if (!hasChildElements)
-			return textContent.trim();
+			return this.trim ? textContent.trim() : textContent;
 		else
 			return element;
 	}

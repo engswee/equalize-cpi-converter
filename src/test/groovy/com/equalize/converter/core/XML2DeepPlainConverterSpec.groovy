@@ -241,4 +241,16 @@ class XML2DeepPlainConverterSpec extends Specification {
 		ConverterException e = thrown()
 		e.message == "More fields found in XML structure than specified in parameter 'Delivery.fieldFixedLengths'"
 	}
+
+	def 'XML > Plain - field with leading space'() {
+		given:
+		this.properties << ['recordsetStructure':'Delivery,Order']
+		this.properties << ['Delivery.fieldFixedLengths':'5,10']
+		this.properties << ['Order.fieldFixedLengths':'5,10,5']
+		this.inputFileName = 'XML2DeepPlain_Scenario5.xml'
+		this.outputFileName = 'XML2DeepPlain_Scenario5_output.txt'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
 }

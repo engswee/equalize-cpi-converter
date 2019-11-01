@@ -6,7 +6,7 @@
 
 	<groupId>com.equalize.cpi</groupId>
 	<artifactId>converter-core</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 
 	<name>converter-core</name>
 	<url>https://github.com/engswee/equalize-cpi-converter</url>

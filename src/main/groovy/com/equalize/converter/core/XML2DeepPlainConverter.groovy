@@ -16,6 +16,7 @@ class XML2DeepPlainConverter extends AbstractConverter {
 	XMLElementContainer rootXML
 	String encoding
 	boolean useDOM
+	boolean trim
 	final Map<String, RecordTypeParametersXML2Plain> recordTypes
 
 	XML2DeepPlainConverter(Object body, Map<String,Object> properties, ClassTypeConverter typeConverter) {
@@ -27,6 +28,7 @@ class XML2DeepPlainConverter extends AbstractConverter {
 	void retrieveParameters(){
 		this.encoding = this.ph.retrieveProperty('encoding', 'UTF-8')
 		this.useDOM = this.ph.retrievePropertyAsBoolean('useDOM', 'N')
+		this.trim = this.ph.retrievePropertyAsBoolean('trim', 'N')
 		String recordsetStructure = this.ph.retrieveProperty('recordsetStructure')
 
 		String[] recordsetList = recordsetStructure.split(',')
@@ -49,11 +51,11 @@ class XML2DeepPlainConverter extends AbstractConverter {
 		if (this.useDOM) {
 			def is =  this.typeConverter.convertTo(InputStream, this.body)
 			ConversionDOMInput domIn = new ConversionDOMInput(is)
-			this.rootXML = domIn.extractDOMContent()
+			this.rootXML = domIn.extractDOMContent(this.trim)
 		} else {
 			def reader =  this.typeConverter.convertTo(Reader, this.body)
 			ConversionSAXInput saxIn = new ConversionSAXInput(reader)
-			this.rootXML = saxIn.extractXMLContent()
+			this.rootXML = saxIn.extractXMLContent(this.trim)
 		}
 	}
 
