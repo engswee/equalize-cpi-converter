@@ -1,6 +1,15 @@
 Version History
 
 ----------------------------------------------------------------------------------------------------
+2.2.0 - Released 23 Jun 2020
+----------------------------------------------------------------------------------------------------
+i) Switch JSON parsing in JSON2XMLConverter to use built-in JsonSlurper in Groovy
+ii) Switch JSON generation in XML2JSONConverter to use built-in JsonOutput in Groovy
+iii) Remove dependency on org.json library
+iv) Fix issue #5 - add parameter 'arrayGPathList' to XML2JSONConverter
+    - this enables forcing of specific nodes to a JSON Array based on GPath notation
+
+----------------------------------------------------------------------------------------------------
 2.1.1 - Released 5 Nov 2019
 ----------------------------------------------------------------------------------------------------
 i) Fix issue #4 - XML text nodes no longer automatically trimmed as they are considered
