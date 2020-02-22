@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ns:MT_JSON2XML xmlns:ns="urn:equalize:com">
   <glossary>
+    <title>example glossary</title>
     <GlossDiv>
       <title>S</title>
       <GlossList>
@@ -12,7 +13,13 @@
           <Abbrev>ISO 8879:1986</Abbrev>
           <GlossDef>
             <para>A meta-markup language, used to create markup languages such as DocBook.</para>
+            <GlossSeeAlso>GML</GlossSeeAlso>
             <GlossSeeAlso>XML</GlossSeeAlso>
+          </GlossDef>
+          <GlossDef>
+            <para>para 2</para>
+            <GlossSeeAlso>ABC</GlossSeeAlso>
+            <GlossSeeAlso>DEF</GlossSeeAlso>
           </GlossDef>
           <GlossSee>markup</GlossSee>
         </GlossEntry>

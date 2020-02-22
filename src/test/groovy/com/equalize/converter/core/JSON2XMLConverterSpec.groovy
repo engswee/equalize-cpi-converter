@@ -178,4 +178,28 @@ class JSON2XMLConverterSpec extends Specification {
 		expect:
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
+
+	def 'JSON -> XML - nested node with array'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['documentName':'MT_JSON2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.inputFileName = 'JSON2XML_Scenario6.json'
+		this.outputFileName = 'JSON2XML_Scenario6_output.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
+	def 'JSON -> XML - integer, boolean in JSON field content'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['documentName':'MT_JSON2XML']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.inputFileName = 'JSON2XML_Scenario7.json'
+		this.outputFileName = 'JSON2XML_Scenario7_output.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
 }

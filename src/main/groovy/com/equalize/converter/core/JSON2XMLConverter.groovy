@@ -34,7 +34,7 @@ class JSON2XMLConverter extends AbstractConverter {
 
 	@Override
 	void parseInput() {
-		def input =  this.typeConverter.convertTo(String, this.body)
+		def input =  this.typeConverter.convertTo(Reader, this.body)
 		ConversionJSONInput jsonIn
 		if(this.allowArrayAtTop)
 			jsonIn = new ConversionJSONInput(input, this.topArrayName)
