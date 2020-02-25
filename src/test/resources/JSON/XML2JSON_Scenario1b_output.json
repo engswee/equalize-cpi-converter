@@ -1,21 +1,25 @@
-{"glossary": {
-  "rightpadded": "example glossary",
-  "GlossDiv": {
-    "GlossList": {"GlossEntry": {
-      "emptytag": "",
-      "GlossDef": {
-        "blanktag": [
-          "",
-          "XML"
-        ],
-        "para": "A meta-markup language, used to create markup languages such as DocBook."
-      },
-      "GlossTerm": "Standard Generalized Markup Language",
-      "GlossSee": "markup",
-      "leftpadded": "SGML",
-      "lefttabbed": "SGML",
-      "righttabbed": "ISO 8879:1986"
-    }},
-    "spaces": ""
-  }
-}}
+{
+    "glossary": {
+        "rightpadded": "example glossary",
+        "GlossDiv": {
+            "GlossList": {
+                "GlossEntry": {
+                    "emptytag": "",
+                    "GlossDef": {
+                        "blanktag": [
+                            "",
+                            "XML"
+                        ],
+                        "para": "A meta-markup language, used to create markup languages such as DocBook."
+                    },
+                    "GlossTerm": "Standard Generalized Markup Language",
+                    "GlossSee": "markup",
+                    "leftpadded": "SGML",
+                    "lefttabbed": "SGML",
+                    "righttabbed": "ISO 8879:1986"
+                }
+            },
+            "spaces": ""
+        }
+    }
+}
