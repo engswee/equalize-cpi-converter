@@ -24,8 +24,10 @@ class PropertyHelperSpec extends Specification {
 		String contentBlank = this.ph.retrieveProperty('stringParamBlank')
 
 		then: 'value of property is returned'
-		content == 'abcDEF'
-		contentBlank == ''
+		verifyAll {
+			content == 'abcDEF'
+			contentBlank == ''
+		}
 	}
 
 	def 'String - exception is triggered if mandatory parameter is not populated'() {
@@ -43,8 +45,10 @@ class PropertyHelperSpec extends Specification {
 		String contentBlank = this.ph.retrieveProperty('optParamBlank','')
 
 		then: 'default value of property is returned'
-		content == 'XYZ123'
-		contentBlank == ''
+		verifyAll {
+			content == 'XYZ123'
+			contentBlank == ''
+		}
 	}
 
 	def 'Integer - value for available property is returned'() {
@@ -53,8 +57,10 @@ class PropertyHelperSpec extends Specification {
 		int contentZero = this.ph.retrievePropertyAsInt('intParamZero')
 
 		then: 'value of property is returned'
-		content == 2
-		contentZero == 0
+		verifyAll {
+			content == 2
+			contentZero == 0
+		}
 	}
 
 	def 'Integer - exception is triggered if mandatory parameter is not populated'() {
@@ -72,8 +78,10 @@ class PropertyHelperSpec extends Specification {
 		int contentZero = this.ph.retrievePropertyAsInt('optIntParamZero','0')
 
 		then: 'default value of property is returned'
-		content == 15
-		contentZero == 0
+		verifyAll {
+			content == 15
+			contentZero == 0
+		}
 	}
 
 	def 'Boolean - value for available property is returned'() {
@@ -82,8 +90,10 @@ class PropertyHelperSpec extends Specification {
 		boolean contentNo = this.ph.retrievePropertyAsBoolean('booleanParamNo')
 
 		then: 'value of property is returned'
-        content
-        !contentNo
+		verifyAll {
+			content
+			!contentNo
+		}
 	}
 
 	def 'Boolean - exception is triggered if mandatory parameter is not populated'() {
@@ -101,8 +111,10 @@ class PropertyHelperSpec extends Specification {
 		boolean contentNo = this.ph.retrievePropertyAsBoolean('optBoolParamNo','N')
 
 		then: 'default value of property is returned'
-        content
-        !contentNo
+		verifyAll {
+			content
+			!contentNo
+		}
 	}
 
 	def 'checkValidValues - exception is not thrown if configured parameter is a valid value'() {
