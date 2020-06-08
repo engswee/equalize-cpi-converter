@@ -13,7 +13,6 @@ import spock.lang.Unroll
 
 class Excel2XMLConverterSpec extends Specification {
 	static final String filePath = 'src/test/resources/Excel'
-	static final String newLine = System.getProperty('line.separator')
 
 	Exchange exchange
 	Map<String,Object> properties
@@ -36,13 +35,7 @@ class Excel2XMLConverterSpec extends Specification {
 		def fcb = new FormatConversionBean(this.exchange, properties)
 		byte[] output = fcb.convert()
 
-		String generatedOutput = new String(output, 'UTF-8')
-		// XML is generated with system native line endings
-		// So on Windows, replace CRLF so that it matches sample output
-		if (newLine == '\r\n')
-			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
-
-		return generatedOutput
+		return new String(output, 'UTF-8')
 	}
 
 	// Reference - https://blogs.sap.com/2014/10/21/exceltransformbean-part-1-convert-various-excel-formats-to-simple-xml-easily/

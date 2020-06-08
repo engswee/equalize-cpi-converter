@@ -13,7 +13,6 @@ import spock.lang.Specification
 
 class XML2ExcelConverterSpec extends Specification {
 	static final String filePath = 'src/test/resources/Excel'
-	static final String newLine = System.getProperty('line.separator')
 
 	Exchange exchange
 	Map<String,Object> properties

@@ -77,7 +77,7 @@ class Base64DecodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Decode_Scenario1_output.xml'
 
 		expect:
-		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8')
+		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8').normalize()
 	}
 
 	def 'Base64 Decode - Plain input containing binary uncompressed content'() {
@@ -113,7 +113,7 @@ class Base64DecodeConverterSpec extends Specification {
 		this.outputFileName = 'Base64Decode_Scenario3_output.txt'
 
 		expect:
-		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8')
+		new String(process(), 'UTF-8') == this.expectedOutputFile.getText('UTF-8').normalize()
 	}
 
 	def 'Base64 Decode - exception is thrown when XPath expression is invalid'() {

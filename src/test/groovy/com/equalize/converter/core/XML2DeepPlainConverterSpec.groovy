@@ -11,7 +11,6 @@ import spock.lang.Specification
 
 class XML2DeepPlainConverterSpec extends Specification {
 	static final String filePath = 'src/test/resources/FCC'
-	static final String newLine = System.getProperty('line.separator')
 
 	Exchange exchange
 	Map<String,Object> properties
@@ -34,13 +33,7 @@ class XML2DeepPlainConverterSpec extends Specification {
 		def fcb = new FormatConversionBean(this.exchange, properties)
 		byte[] output = fcb.convert()
 
-		String generatedOutput = new String(output, 'UTF-8')
-		// Output is generated with system native line endings
-		// So on Windows, replace CRLF so that it matches sample output
-		if (newLine == '\r\n')
-			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
-
-		return generatedOutput
+		return new String(output, 'UTF-8')
 	}
 
 	// Reference - https://blogs.sap.com/2015/03/06/deepfccbean-the-better-fcc-at-meeting-your-deep-structure-needs-part-1-deep-xml-to-flat-file/

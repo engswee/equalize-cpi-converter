@@ -21,9 +21,6 @@
 * text=auto
 
 # Always normalize to LF when checking-out to working directory
-*.xml eol=lf
-*.json eol=lf
-*.txt eol=lf
 
 # Denote all files that are truly binary and should not be modified.
 *.jpg binary

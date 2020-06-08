@@ -13,7 +13,6 @@ import spock.lang.Specification
 
 class Base64EncodeConverterSpec extends Specification {
 	static final String filePath = 'src/test/resources/Base64'
-	static final String newLine = System.getProperty('line.separator')
 
 	Exchange exchange
 	Map<String,Object> properties
@@ -30,8 +29,10 @@ class Base64EncodeConverterSpec extends Specification {
 	}
 
 	private byte[] process() {
-		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
-		this.expectedOutputFile = new File("$filePath/$outputFileName")
+		if (inputFileName) {
+			this.exchange.getIn().setBody(new File("$filePath/$inputFileName").text.normalize())
+			this.expectedOutputFile = new File("$filePath/$outputFileName")
+		}
 
 		def fcb = new FormatConversionBean(this.exchange, properties)
 		fcb.convert()
@@ -112,7 +113,7 @@ class Base64EncodeConverterSpec extends Specification {
 		String decodedText = new String(decoder.decode(), 'UTF-8')
 
 		then:
-		decodedText == this.expectedOutputFile.getText('UTF-8')
+		decodedText == this.expectedOutputFile.getText('UTF-8').normalize()
 	}
 
 	def 'Base64 Encode - XML output with default field name'() {
@@ -125,10 +126,6 @@ class Base64EncodeConverterSpec extends Specification {
 
 		when:
 		String generatedOutput = new String(process(), 'UTF-8')
-		// XML is generated with system native line endings
-		// So on Windows, replace CRLF so that it matches sample output
-		if (newLine == '\r\n')
-			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
 
 		then:
 		generatedOutput == this.expectedOutputFile.getText('UTF-8')
@@ -145,10 +142,6 @@ class Base64EncodeConverterSpec extends Specification {
 
 		when:
 		String generatedOutput = new String(process(), 'UTF-8')
-		// XML is generated with system native line endings
-		// So on Windows, replace CRLF so that it matches sample output
-		if (newLine == '\r\n')
-			generatedOutput = generatedOutput.replaceAll(newLine, '\n')
 
 		then:
 		generatedOutput == this.expectedOutputFile.getText('UTF-8')
