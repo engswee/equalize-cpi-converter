@@ -1,0 +1,9 @@
+<test>
+	<customFields>
+		<fields>123</fields>
+		<fields>456</fields>
+	</customFields>
+	<customer>
+		<customFields>abc</customFields>
+	</customer>
+</test>

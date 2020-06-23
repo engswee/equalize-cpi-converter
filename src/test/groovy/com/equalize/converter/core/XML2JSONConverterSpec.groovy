@@ -78,6 +78,29 @@ class XML2JSONConverterSpec extends Specification {
 		process() == this.expectedOutputFile.getText('UTF-8').normalize()
 	}
 
+	def 'XML -> JSON - selected list of array fields using GPath'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['skipRootNode':'Y']
+		this.properties << ['arrayGPathList':'multi,oneparentmanychild,oneparentonechild.title']
+		this.inputFileName = 'XML2JSON_Scenario6.xml'
+		this.outputFileName = 'XML2JSON_Scenario6_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8').normalize()
+	}
+
+	def 'XML -> JSON - selected list of array fields using GPath example 2'() {
+		given:
+		this.properties << ['indentFactor':'2']
+		this.properties << ['arrayGPathList':'test.customer.customFields']
+		this.inputFileName = 'XML2JSON_Scenario5.xml'
+		this.outputFileName = 'XML2JSON_Scenario5_output.json'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8').normalize()
+	}
+
 	def 'XML -> JSON - set forceArrayAll'() {
 		given:
 		this.properties << ['indentFactor':'2']

@@ -6,6 +6,7 @@ class ConversionJSONOutput {
 
   boolean forceArray = false
   Set<String> arrayFields
+  Set<String> arrayGPaths
   Map<String, String> fieldConversions
 
   String generateJSONText(XMLElementContainer xmlElement, boolean skipRoot, int indentFactor) {
@@ -86,6 +87,7 @@ class ConversionJSONOutput {
 //            .excludeNulls()
 //            .disableUnicodeEscaping()
 //            .build()
+    this.forceGPathArrays(jo)
     if (indentFactor)
       return JsonOutput.prettyPrint(JsonOutput.toJson(jo))
     else
@@ -100,6 +102,29 @@ class ConversionJSONOutput {
       def jsonArray = []
       jsonArrayTracker.put(arrayName, jsonArray)
       return jsonArray
+    }
+  }
+
+  private forceGPathArrays(Map rootJsonObject) {
+    this.arrayGPaths.each { String gpath ->
+      // Get the object at the GPath location
+      def object = Eval.me('root', rootJsonObject, "root.${gpath}")
+      if (!(object instanceof List)) {
+        def parentObj
+        def fieldName
+        int index = gpath.lastIndexOf('.')
+        if (index == -1) {
+          parentObj = rootJsonObject
+          fieldName = gpath
+        } else {
+          def parentObjPath = gpath.substring(0, index)
+          fieldName = gpath.substring(index+1)
+          // Get the parent object
+          parentObj = Eval.me('root', rootJsonObject, "root.${parentObjPath}")
+        }
+        // Replace the object with an array that contains the object
+        Eval.xy(parentObj, [object], "x.replace('${fieldName}', y)")
+      }
     }
   }
 }
