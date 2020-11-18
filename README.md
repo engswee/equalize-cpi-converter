@@ -1,6 +1,6 @@
 # Equalize CPI Converter a.k.a. FormatConversionBean for CPI
 
-[![Build Status](https://travis-ci.org/engswee/equalize-cpi-converter.svg?branch=master)](https://travis-ci.org/engswee/equalize-cpi-converter)
+[![Build Status](https://dev.azure.com/engswee/equalize-cpi-converter/_apis/build/status/engswee.equalize-cpi-converter?branchName=master)](https://dev.azure.com/engswee/equalize-cpi-converter/_build/latest?definitionId=8&branchName=master)
 [![Codecov](https://img.shields.io/codecov/c/github/engswee/equalize-cpi-converter.svg)](https://codecov.io/gh/engswee/equalize-cpi-converter)
 [![GitHub release](https://img.shields.io/github/release/engswee/equalize-cpi-converter.svg)](https://github.com/engswee/equalize-cpi-converter/releases/latest)
 [![Github All Releases](https://img.shields.io/github/downloads/engswee/equalize-cpi-converter/total.svg)](https://www.somsubhra.com/github-release-stats/?username=engswee&repository=equalize-cpi-converter)
