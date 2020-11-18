@@ -33,5 +33,5 @@ steps:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'clean initialize clover:instrument-test clover:check clover:clover'
   - script: |
-      bash <(curl -s https://codecov.io/bash) -C $(Build.SourceVersion)
+      bash <(curl -s https://codecov.io/bash)
     displayName: 'Upload to codecov.io'
