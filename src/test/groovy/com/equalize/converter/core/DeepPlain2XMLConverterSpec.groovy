@@ -351,6 +351,24 @@ class DeepPlain2XMLConverterSpec extends Specification {
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
+	def 'Plain > XML - Tab delimited input with non ASCII characters'() {
+		given:
+		this.properties << ['documentName':'Test']
+		this.properties << ['documentNamespace':'http://test.com']
+		this.properties << ['recordsetStructure':'Line']
+		this.properties << ['keyFieldName':'KeyField']
+		this.properties << ['Line.fieldNames':'KeyField,Japanese,German,Korean,Nordic']
+		this.properties << ['Line.keyFieldValue':'Key']
+		this.properties << ['Line.parent':'Root']
+		this.properties << ['defaultFieldSeparator':"'0x09'"]
+		this.properties << ['indentFactor':'2']
+		this.inputFileName = 'DeepPlain2XML_Scenario9.txt'
+		this.outputFileName = 'DeepPlain2XML_Scenario9_output.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
 	def 'Plain > XML - Fixed length input without indent'() {
 		given:
 		this.properties << ['documentName':'MT_DeepPlain2XML']

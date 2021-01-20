@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns:Test xmlns:ns="http://test.com">
+  <Line>
+    <KeyField>Key</KeyField>
+    <Japanese>平仮名,ひらがな</Japanese>
+    <German>Umlaut - ü</German>
+    <Korean>훈민정음</Korean>
+    <Nordic>Yrjö Kyrölä</Nordic>
+  </Line>
+</ns:Test>
