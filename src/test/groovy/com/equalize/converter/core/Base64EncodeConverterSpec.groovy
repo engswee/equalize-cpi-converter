@@ -128,7 +128,7 @@ class Base64EncodeConverterSpec extends Specification {
 		String generatedOutput = new String(process(), 'UTF-8')
 
 		then:
-		generatedOutput.normalize() == this.expectedOutputFile.getText('UTF-8')
+		generatedOutput.normalize() == this.expectedOutputFile.getText('UTF-8').normalize()
 	}
 
 	def 'Base64 Encode - XML output with configured field name'() {
@@ -144,6 +144,6 @@ class Base64EncodeConverterSpec extends Specification {
 		String generatedOutput = new String(process(), 'UTF-8')
 
 		then:
-		generatedOutput.normalize() == this.expectedOutputFile.getText('UTF-8')
+		generatedOutput.normalize() == this.expectedOutputFile.getText('UTF-8').normalize()
 	}
 }
