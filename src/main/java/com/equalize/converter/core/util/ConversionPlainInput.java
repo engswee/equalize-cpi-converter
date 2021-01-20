@@ -12,9 +12,9 @@ import java.util.Scanner;
 public class ConversionPlainInput {
 	private final List<String> lineContents;
 
-	public ConversionPlainInput(InputStream inStream, String endSeparator) {
+	public ConversionPlainInput(InputStream inStream, String endSeparator, String encoding) {
 		List<String> contents = new ArrayList<>();
-		Scanner scanner = new Scanner(inStream, "UTF-8");
+		Scanner scanner = new Scanner(inStream, encoding);
 		scanner.useDelimiter(endSeparator);
 		while (scanner.hasNext()) {
 			String lineContent = scanner.next();
@@ -24,9 +24,9 @@ public class ConversionPlainInput {
 		this.lineContents = contents;
 	}
 
-	public ConversionPlainInput(InputStream inStream) throws IOException {
+	public ConversionPlainInput(InputStream inStream, String encoding) throws IOException {
 		List<String> contents = new ArrayList<>();
-		LineNumberReader lnr = new LineNumberReader(new InputStreamReader(inStream));
+		LineNumberReader lnr = new LineNumberReader(new InputStreamReader(inStream, encoding));
 		String lineContent;
 		while ((lineContent = lnr.readLine()) != null) {
 			contents.add(lineContent);

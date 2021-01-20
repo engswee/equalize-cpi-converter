@@ -64,9 +64,9 @@ class DeepPlain2XMLConverter extends AbstractConverter {
 		def is =  this.typeConverter.convertTo(InputStream, this.body)
 		if (this.endSeparator) {
 			Separator sep = new Separator(this.endSeparator, this.encoding)
-			this.plainIn = new ConversionPlainInput(is, sep.toString())
+			this.plainIn = new ConversionPlainInput(is, sep.toString(), this.encoding)
 		} else
-			this.plainIn = new ConversionPlainInput(is)
+			this.plainIn = new ConversionPlainInput(is, this.encoding)
 		this.nestedContents = generateNestedContents()
 	}
 
