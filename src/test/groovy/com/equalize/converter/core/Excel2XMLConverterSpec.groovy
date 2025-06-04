@@ -253,6 +253,20 @@ class Excel2XMLConverterSpec extends Specification {
 		process() == this.expectedOutputFile.getText('UTF-8')
 	}
 
+	def 'Excel -> XML - XLSX input processFieldNames = fromFile - password'() {
+		given:
+		this.properties << ['documentName':'MT_Order']
+		this.properties << ['documentNamespace':'urn:equalize:com']
+		this.properties << ['sheetName':'Sheet1']
+		this.properties << ['processFieldNames':'fromFile']
+		this.properties << ['password':'helloworld']
+		this.inputFileName = 'Excel2XML_Scenario1_password.xlsx'
+		this.outputFileName = 'Excel2XML_Scenario1_output_noindent.xml'
+
+		expect:
+		process() == this.expectedOutputFile.getText('UTF-8')
+	}
+
 	def 'Excel -> XML - XLSX input processFieldNames = fromFile with indentFactor'() {
 		given:
 		this.properties << ['indentFactor':'2']

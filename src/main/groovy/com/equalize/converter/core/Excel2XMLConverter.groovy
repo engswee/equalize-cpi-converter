@@ -11,6 +11,7 @@ class Excel2XMLConverter extends AbstractConverter {
 
 	// Module parameters
 	String sheetName
+	String password
 	int sheetIndex
 	String processFieldNames
 	int headerRow = 0
@@ -47,7 +48,7 @@ class Excel2XMLConverter extends AbstractConverter {
 			throw new ConverterException('Use only parameter sheetName or sheetIndex, not both')
 		} else if (sheetIndexString)
 			this.sheetIndex = sheetIndexString as int
-
+		this.password = this.ph.retrieveProperty('password', '')
 		// Output XML document properties
 		this.recordName = this.ph.retrieveProperty('recordName', 'Record')
 		this.documentName = this.ph.retrieveProperty('documentName')
@@ -96,9 +97,9 @@ class Excel2XMLConverter extends AbstractConverter {
 		def is =  this.typeConverter.convertTo(InputStream, this.body)
 		ConversionExcelInput excelIn
 		if (this.sheetName)
-			excelIn = new ConversionExcelInput(is, this.sheetName)
+			excelIn = new ConversionExcelInput(is, this.sheetName, this.password)
 		else
-			excelIn = new ConversionExcelInput(is, this.sheetIndex)
+			excelIn = new ConversionExcelInput(is, this.sheetIndex, this.password)
 
 		excelIn.determineColumnDetails(this.processFieldNames, this.fieldNames, this.columnCount, this.headerRow, this.onlyValidCharsInXMLName)
 

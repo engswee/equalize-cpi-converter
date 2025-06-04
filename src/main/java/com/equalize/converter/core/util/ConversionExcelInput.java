@@ -30,18 +30,30 @@ public class ConversionExcelInput {
 			throw new ConverterException("Sheet " + sheetName + " not found");
 	}
 
+	public ConversionExcelInput(InputStream is, String sheetName, String password) throws Exception {
+		this.workbook = password.isEmpty() ? WorkbookFactory.create(is) : WorkbookFactory.create(is, password);
+		this.sheet = this.workbook.getSheet(sheetName);
+		if (this.sheet == null)
+			throw new ConverterException("Sheet " + sheetName + " not found");
+	}
+
 	public ConversionExcelInput(InputStream is, int sheetIndex) throws Exception {
 		this.workbook = WorkbookFactory.create(is);
 		this.sheet = this.workbook.getSheetAt(sheetIndex);
 	}
-	
+
+	public ConversionExcelInput(InputStream is, int sheetIndex, String password) throws Exception {
+		this.workbook = password.isEmpty() ? WorkbookFactory.create(is) : WorkbookFactory.create(is, password);
+		this.sheet = this.workbook.getSheetAt(sheetIndex);
+	}
+
 	public String retrieveCellStringValue(int row, int col) {
 		return this.sheet.getRow(row).getCell(col).getStringCellValue();
 	}
-	
+
 	public String retrieveFormat() {
 		if (this.workbook instanceof HSSFWorkbook) {
-			return "xls"; 
+			return "xls";
 		} else {
 			return "xlsx";
 		}
