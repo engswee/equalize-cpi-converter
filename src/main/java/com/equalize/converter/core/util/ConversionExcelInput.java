@@ -81,6 +81,8 @@ public class ConversionExcelInput {
 			String formatting, String emptyCellDefaultValue, int headerRow, String recordName)
 			throws ConverterException {
 		int noOfRows = this.sheet.getLastRowNum() + 1;
+		if (noOfRows == 0)
+			throw new ConverterException("No rows with valid contents found");
 		if (startRow >= noOfRows)
 			throw new ConverterException("Starting row is greater than last row of sheet");
 
@@ -130,7 +132,7 @@ public class ConversionExcelInput {
 		FormulaEvaluator evaluator = this.workbook.getCreationHelper().createFormulaEvaluator();
 		DataFormatter formatter = new DataFormatter(true);
 		String cellContent = null;
-		CellType cellType = cell.getCellTypeEnum();
+		CellType cellType = cell.getCellType();
 		switch (cellType) {
 			case FORMULA:
 				cellContent = evaluateFormulas ? formatter.formatCellValue(cell, evaluator) : cell.getCellFormula();
