@@ -3,7 +3,7 @@ package com.equalize.cpi.converter
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.impl.DefaultCamelContext
-import org.apache.camel.impl.DefaultExchange
+import org.apache.camel.support.DefaultExchange
 
 /*
  Sample arguments for script 

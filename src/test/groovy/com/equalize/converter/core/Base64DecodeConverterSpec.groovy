@@ -3,7 +3,7 @@ package com.equalize.converter.core
 import org.apache.camel.CamelContext
 import org.apache.camel.Exchange
 import org.apache.camel.impl.DefaultCamelContext
-import org.apache.camel.impl.DefaultExchange
+import org.apache.camel.support.DefaultExchange
 import com.equalize.converter.core.util.ConverterException
 import com.equalize.cpi.converter.FormatConversionBean
 
@@ -27,7 +27,7 @@ class Base64DecodeConverterSpec extends Specification {
 	}
 
 	private byte[] process() {
-		this.exchange.getIn().setBody(new File("$filePath/$inputFileName"))
+		this.exchange.getIn().setBody(this.getClass().getResource("/Base64/${inputFileName}")?.newInputStream())
 		this.expectedOutputFile = new File("$filePath/$outputFileName")
 
 		def fcb = new FormatConversionBean(this.exchange, properties)
