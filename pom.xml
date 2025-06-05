@@ -17,7 +17,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<groovy.all.version>2.4.21</groovy.all.version>
 		<spock.version>1.3-groovy-2.4</spock.version>
-		<camel.core.version>3.14.7</camel.core.version>
+		<camel.core.version>3.21.4</camel.core.version>
 		<apache.poi.version>5.4.0</apache.poi.version>
 		<log4j.version>2.24.3</log4j.version>
 	</properties>
