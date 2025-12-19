@@ -19,7 +19,7 @@
 		<spock.version>1.3-groovy-2.4</spock.version>
 		<camel.core.version>3.14.7</camel.core.version>
 		<apache.poi.version>5.4.0</apache.poi.version>
-		<log4j.version>2.24.3</log4j.version>
+		<log4j.version>2.25.3</log4j.version>
 	</properties>
 
 	<dependencies>
